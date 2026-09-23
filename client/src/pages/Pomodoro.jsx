@@ -79,7 +79,7 @@ export const Pomodoro = () => {
       </div>
 
       {/* Main Focus Center Card */}
-      <div className="max-w-2xl mx-auto glass-card rounded-3xl p-8 border border-emerald-500/30 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+      <div className="max-w-2xl mx-auto glass-card rounded-3xl p-5 sm:p-8 border border-emerald-500/30 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
         {/* Glow backdrop */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none" />
 
@@ -87,7 +87,7 @@ export const Pomodoro = () => {
         <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 dark:border-slate-700/40 mb-6">
           <button
             onClick={() => { setMode('work'); setIsActive(false); }}
-            className={`px-5 py-2 rounded-xl font-poppins text-xs font-semibold transition-all ${
+            className={`px-3.5 sm:px-5 py-2 rounded-xl font-poppins text-xs font-semibold transition-all ${
               mode === 'work' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-600 dark:text-slate-400'
             }`}
           >
@@ -95,7 +95,7 @@ export const Pomodoro = () => {
           </button>
           <button
             onClick={() => { setMode('break'); setIsActive(false); }}
-            className={`px-5 py-2 rounded-xl font-poppins text-xs font-semibold transition-all ${
+            className={`px-3.5 sm:px-5 py-2 rounded-xl font-poppins text-xs font-semibold transition-all ${
               mode === 'break' ? 'bg-teal-500 text-white shadow-md' : 'text-slate-600 dark:text-slate-400'
             }`}
           >
@@ -110,9 +110,9 @@ export const Pomodoro = () => {
             rotate: isActive ? [0, 2, -2, 0] : 0
           }}
           transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          className="w-36 h-36 rounded-3xl bg-gradient-to-tr from-emerald-500/20 via-teal-400/20 to-emerald-200/30 border border-emerald-400/40 flex flex-col items-center justify-center shadow-inner relative my-2"
+          className="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl bg-gradient-to-tr from-emerald-500/20 via-teal-400/20 to-emerald-200/30 border border-emerald-400/40 flex flex-col items-center justify-center shadow-inner relative my-2"
         >
-          <span className="text-6xl drop-shadow-md">{currentPlant.emoji}</span>
+          <span className="text-5xl sm:text-6xl drop-shadow-md">{currentPlant.emoji}</span>
           <span className="absolute -bottom-3 px-3 py-0.5 rounded-full bg-emerald-500 text-white font-poppins font-bold text-[10px] shadow-sm">
             {currentPlant.label}
           </span>
@@ -123,15 +123,15 @@ export const Pomodoro = () => {
         </p>
 
         {/* Big Digit Timer */}
-        <div className="font-poppins font-black text-6xl md:text-7xl text-slate-800 dark:text-slate-100 tracking-wider my-4">
+        <div className="font-poppins font-black text-5xl sm:text-6xl md:text-7xl text-slate-800 dark:text-slate-100 tracking-wider my-4">
           {formatTime(secondsLeft)}
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-4 my-4 w-full max-w-sm">
+        <div className="flex items-center gap-3 sm:gap-4 my-4 w-full max-w-sm">
           <button
             onClick={toggleTimer}
-            className={`flex-1 py-3.5 rounded-2xl font-poppins text-sm font-bold flex items-center justify-center gap-2 text-white shadow-xl transition-all ${
+            className={`flex-1 py-3 sm:py-3.5 rounded-2xl font-poppins text-xs sm:text-sm font-bold flex items-center justify-center gap-2 text-white shadow-xl transition-all ${
               isActive
                 ? 'bg-amber-500 hover:bg-amber-600 shadow-amber-500/25'
                 : 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/30'
@@ -144,14 +144,14 @@ export const Pomodoro = () => {
           <button
             onClick={resetTimer}
             title="Reset Timer"
-            className="p-3.5 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 text-slate-500 hover:text-slate-800 dark:hover:text-slate-100 transition-colors shadow-sm"
+            className="p-3 sm:p-3.5 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 text-slate-500 hover:text-slate-800 dark:hover:text-slate-100 transition-colors shadow-sm"
           >
             <RotateCcw className="w-5 h-5" />
           </button>
         </div>
 
         {/* Plant Growth Stages Progress Footer */}
-        <div className="mt-6 pt-6 border-t border-slate-200/30 dark:border-slate-800/40 w-full flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+        <div className="mt-6 pt-6 border-t border-slate-200/30 dark:border-slate-800/40 w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-2">
             <Flame className="w-4 h-4 text-amber-500" />
             <span>Completed Today: <strong className="text-emerald-500">{totalCompleted} sessions</strong></span>

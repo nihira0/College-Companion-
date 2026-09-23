@@ -131,7 +131,7 @@ export const Notes = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-md glass-card rounded-3xl p-6 shadow-2xl border border-white/30"
+            className="w-full max-w-md max-h-[90vh] overflow-y-auto glass-card rounded-3xl p-5 sm:p-6 shadow-2xl border border-white/30"
           >
             <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-200/40">
               <h3 className="font-poppins font-bold text-sm text-slate-800 dark:text-slate-100">

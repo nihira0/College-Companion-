@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Sun, Moon, Sunset, CloudSun, Bell, Command } from 'lucide-react';
+import { Search, Sun, Moon, Sunset, CloudSun, Bell, Command, Menu } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const Navbar = ({ onOpenOmnibar }) => {
+export const Navbar = ({ onOpenOmnibar, onToggleMobileSidebar, isMobileSidebarOpen }) => {
   const { timeOfDay, toggleTimeOfDay } = useTheme();
   const { user } = useAuth();
   const { toasts } = useNotification();
@@ -43,20 +43,30 @@ export const Navbar = ({ onOpenOmnibar }) => {
   });
 
   return (
-    <header className="fixed top-5 left-72 right-5 h-16 glass-card rounded-2xl z-30 flex items-center justify-between px-6 transition-all duration-300">
+    <header className="fixed top-3 md:top-5 left-3 md:left-72 right-3 md:right-5 h-16 glass-card rounded-2xl z-30 flex items-center justify-between px-3 md:px-6 transition-all duration-300 gap-2">
+      {/* Mobile Hamburger Toggle Button */}
+      <button
+        onClick={onToggleMobileSidebar}
+        title="Toggle Menu"
+        aria-label="Toggle navigation menu"
+        className="md:hidden p-2 rounded-xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 hover:bg-emerald-500/20 transition-all shrink-0 min-w-[40px] min-h-[40px] flex items-center justify-center"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+
       {/* Search Bar / Omnibar Launcher */}
-      <div className="flex items-center gap-4 flex-1 max-w-md">
+      <div className="flex items-center gap-2 md:gap-4 flex-1 max-w-md">
         <button
           onClick={onOpenOmnibar}
-          className="w-full flex items-center justify-between px-4 py-2 rounded-xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 hover:border-emerald-500/50 transition-all text-xs shadow-inner group"
+          className="w-full flex items-center justify-between px-3 md:px-4 py-2 rounded-xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 hover:border-emerald-500/50 transition-all text-xs shadow-inner group truncate"
         >
-          <div className="flex items-center gap-2.5">
-            <Search className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 transition-colors" />
-            <span className="font-medium text-slate-500 dark:text-slate-400">
-              Search anything... <span className="text-[10px] text-slate-400 dark:text-slate-500">(e.g. attendance, OS notes)</span>
+          <div className="flex items-center gap-2 truncate">
+            <Search className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 transition-colors shrink-0" />
+            <span className="font-medium text-slate-500 dark:text-slate-400 truncate">
+              Search... <span className="hidden sm:inline text-[10px] text-slate-400 dark:text-slate-500">(e.g. attendance, notes)</span>
             </span>
           </div>
-          <div className="flex items-center gap-1 text-[10px] font-semibold bg-slate-200/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md text-slate-600 dark:text-slate-300">
+          <div className="hidden sm:flex items-center gap-1 text-[10px] font-semibold bg-slate-200/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md text-slate-600 dark:text-slate-300 shrink-0">
             <Command className="w-3 h-3" /> K
           </div>
         </button>

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useNotification } from '../context/NotificationContext';
+import { useAuth } from '../context/AuthContext';
 import {
   MessageSquare,
   BookOpen,
@@ -21,19 +22,21 @@ export const SageAI = () => {
   const initialTab = searchParams.get('tab') || 'chat';
   const [activeTab, setActiveTab] = useState(initialTab);
   const { addToast } = useNotification();
+  const { token } = useAuth();
+  const messagesEndRef = useRef(null);
 
   const [selectedSubject, setSelectedSubject] = useState('DBMS');
 
   // Quick Concept Prompts Chips for 1-click real-time answers
   const quickConceptPrompts = [
+    { label: 'My Attendance? 📊', query: 'What is my overall attendance?' },
+    { label: 'Pending Assignments? 📝', query: 'What assignments do I have pending?' },
+    { label: 'Today\'s Timetable? 📅', query: 'What is my timetable for today?' },
+    { label: 'My Marks & CGPA? 🎓', query: 'What is my CGPA and midterm scores?' },
     { label: 'What is BCNF? 🗄️', query: 'What is BCNF in DBMS?' },
     { label: 'TCP 3-Way Handshake 📡', query: 'Explain TCP 3-Way Handshake' },
     { label: 'Coffman Deadlock Conditions 🖥️', query: 'What are Coffman Deadlock Conditions?' },
-    { label: 'Process vs Thread ⚡', query: 'What is the difference between Process and Thread?' },
-    { label: 'ACID Properties 🗄️', query: 'What are ACID properties in DBMS?' },
-    { label: 'Virtual Memory Paging 🖥️', query: 'Explain Virtual Memory Paging' },
-    { label: 'React Virtual DOM 🌐', query: 'What is React Virtual DOM?' },
-    { label: 'QuickSort Complexity ⚡', query: 'What is QuickSort time complexity?' }
+    { label: 'Process vs Thread ⚡', query: 'What is the difference between Process and Thread?' }
   ];
 
   // Real-time Chat State
@@ -41,11 +44,19 @@ export const SageAI = () => {
     {
       id: 1,
       sender: 'Sage',
-      text: "🌿 **Good Morning, Nihaarika!** I am your real-time concept assistant Sage 🌿. Ask me any small or complex concept question (e.g. *What is BCNF?*, *Explain TCP Handshake*, *Process vs Thread*), or click any quick prompt chip below! 🌱"
+      text: "🌿 Good Morning, Nihaarika! I am your real-time academic AI companion Sage 🌿. Ask me about your attendance, assignments, marks, timetable, or any computer science topic!",
+      sourceType: 'System'
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+
+  // Auto scroll to latest message
+  useEffect(() => {
+    if (activeTab === 'chat') {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isTyping, activeTab]);
 
   // Self-testing Flashcards Decks
   const initialDecks = {
@@ -83,7 +94,7 @@ export const SageAI = () => {
   // Send Message Logic
   const handleSendMessage = async (textToSend) => {
     const queryText = textToSend || inputMessage;
-    if (!queryText.trim()) return;
+    if (!queryText.trim() || isTyping) return;
 
     const userMsg = { id: Date.now(), sender: 'User', text: queryText };
     setMessages(prev => [...prev, userMsg]);
@@ -91,21 +102,50 @@ export const SageAI = () => {
     setIsTyping(true);
 
     try {
-      const res = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: queryText })
-      });
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      let res;
+      try {
+        res = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ message: queryText })
+        });
+        if (!res.ok && res.status === 404) {
+          throw new Error('Relative API 404');
+        }
+      } catch (relErr) {
+        res = await fetch('http://localhost:5000/api/ai/chat', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ message: queryText })
+        });
+      }
       const data = await res.json();
       setIsTyping(false);
-      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'Sage', text: data.reply }]);
+      setMessages(prev => [...prev, {
+        id: Date.now() + 1,
+        sender: 'Sage',
+        text: data.reply || data.message || 'No response text received.',
+        sources: data.sources || [],
+        sourceType: data.sourceType
+      }]);
     } catch (err) {
       setIsTyping(false);
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         sender: 'Sage',
-        text: `🌿 **Sage Real-time Concept Answer:** Regarding "${queryText}", remember to test yourself with active recall! Check out the Flashcards or Quiz tabs! 🌱`
+        text: `🌿 **Sage Connection Error:** Unable to reach the server. Please check your backend connection.`
       }]);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
@@ -121,14 +161,15 @@ export const SageAI = () => {
       {
         id: Date.now(),
         sender: 'Sage',
-        text: "🌿 **Chat reset!** I am ready to answer your concept questions. What shall we learn next? 🌱"
+        text: "🌿 **Chat reset!** I am ready to answer your questions. What shall we learn next? 🌱",
+        sourceType: 'System'
       }
     ]);
     addToast('Chat cleared 🌿', 'info', '🧹');
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 pb-12">
       {/* Header */}
       <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-4">
@@ -141,10 +182,10 @@ export const SageAI = () => {
           </motion.div>
           <div>
             <h1 className="font-poppins font-extrabold text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-2">
-              Sage 🌿 Real-Time Concept AI Chatbot
+              Sage 🌿 AI Academic Assistant
             </h1>
             <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium font-poppins mt-0.5">
-              Instant concept answers • Crisp definitions • CS Decks • Self-Testing
+              Live College Companion Data • Gemini Web Search Grounding • Practice Decks
             </p>
           </div>
         </div>
@@ -159,7 +200,7 @@ export const SageAI = () => {
 
       {/* Mode Navigation Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/40 dark:border-slate-800/50 pb-4">
-        <div className="flex items-center gap-2 overflow-x-auto">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
           <button
             onClick={() => setActiveTab('chat')}
             className={`px-4 py-2 rounded-2xl font-poppins text-xs font-semibold flex items-center gap-2 transition-all ${
@@ -167,7 +208,7 @@ export const SageAI = () => {
             }`}
           >
             <MessageSquare className="w-4 h-4" />
-            Real-Time Concept Chat
+            AI Assistant Chat
           </button>
 
           <button
@@ -208,7 +249,7 @@ export const SageAI = () => {
 
       {/* TAB 1: Real-Time Concept Chatbot */}
       {activeTab === 'chat' && (
-        <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 shadow-2xl flex flex-col h-[540px]">
+        <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 shadow-2xl flex flex-col h-[calc(100dvh-240px)] min-h-[480px] md:h-[580px]">
           {/* Chat Messages View */}
           <div className="flex-1 overflow-y-auto space-y-4 pr-2">
             {messages.map(msg => (
@@ -225,27 +266,69 @@ export const SageAI = () => {
                   className={`max-w-xl p-4 rounded-3xl text-xs font-poppins leading-relaxed ${
                     msg.sender === 'User'
                       ? 'bg-emerald-500 text-white shadow-md rounded-tr-none'
-                      : 'bg-white/60 dark:bg-slate-800/60 text-slate-800 dark:text-slate-100 border border-slate-200/40 dark:border-slate-700/40 rounded-tl-none shadow-sm'
+                      : 'bg-white/70 dark:bg-slate-800/70 text-slate-800 dark:text-slate-100 border border-slate-200/50 dark:border-slate-700/50 rounded-tl-none shadow-sm'
                   }`}
                 >
+                  {/* Source Type Badge */}
+                  {msg.sender === 'Sage' && msg.sourceType && (
+                    <div className="mb-2 flex items-center gap-1.5 text-[9px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                      {msg.sourceType.includes('Academic') || msg.sourceType.includes('College Companion') ? '🌿 Academic Records' : msg.sourceType.includes('Web') ? '🌐 Live Web Information' : '✨ Sage AI'}
+                    </div>
+                  )}
+
                   <p className="whitespace-pre-line">{msg.text}</p>
+
+                  {/* Web Sources & Citations */}
+                  {msg.sources && msg.sources.length > 0 && (
+                    <div className="mt-3 pt-2.5 border-t border-slate-200/40 dark:border-slate-700/50 space-y-1.5">
+                      <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 flex items-center gap-1 uppercase tracking-wider">
+                        🌐 Web Sources & Citations:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {msg.sources.map((src, idx) => (
+                          <a
+                            key={idx}
+                            href={src.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 hover:underline bg-emerald-500/10 dark:bg-emerald-500/20 px-2.5 py-0.5 rounded-lg border border-emerald-500/20"
+                          >
+                            <span>🔗</span>
+                            <span className="truncate max-w-[200px]">{src.title}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
+
+            {/* Polished Loading/Thinking Indicator */}
             {isTyping && (
-              <div className="flex gap-2 items-center text-xs text-emerald-500 font-poppins animate-pulse">
-                <span>🌿 Sage is answering your concept question...</span>
+              <div className="flex gap-3 items-center text-xs text-emerald-600 dark:text-emerald-400 font-poppins py-1">
+                <div className="w-8 h-8 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-sm font-bold animate-pulse">
+                  🌿
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">Sage is analyzing academic data & query...</span>
+                  <span className="flex gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping delay-150" />
+                  </span>
+                </div>
               </div>
             )}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Quick Concept Prompts Bar */}
           <div className="my-3 pt-3 border-t border-slate-200/30 dark:border-slate-800/40">
             <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400 mb-2">
               <Zap className="w-3.5 h-3.5 text-amber-500" />
-              <span>Quick Concept Questions (Click to Ask Sage):</span>
+              <span>Quick Academic Prompts (Click to Ask Sage):</span>
             </div>
-            <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
               {quickConceptPrompts.map((item, idx) => (
                 <button
                   key={idx}
@@ -258,21 +341,23 @@ export const SageAI = () => {
             </div>
           </div>
 
-          {/* Input Box */}
-          <form onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} className="flex gap-3">
-            <input
-              type="text"
+          {/* Input Form with Multiline Textarea */}
+          <form onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} className="flex gap-3 items-end">
+            <textarea
+              rows={1}
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Ask Sage any concept question (e.g. 'What is BCNF?', 'Explain TCP 3-Way Handshake')..."
-              className="flex-1 px-4 py-3 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-poppins"
+              onKeyDown={handleKeyDown}
+              placeholder="Ask Sage anything (e.g. 'What is my attendance?', 'What is BCNF?')... [Shift+Enter for new line]"
+              className="flex-1 px-4 py-3 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-poppins resize-none max-h-24"
             />
             <button
               type="submit"
-              className="px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-poppins font-semibold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/25"
+              disabled={!inputMessage.trim() || isTyping}
+              className="px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-poppins font-semibold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/25 transition-all shrink-0"
             >
               <Send className="w-4 h-4" />
-              Ask Sage
+              <span className="hidden sm:inline">Ask Sage</span>
             </button>
           </form>
         </div>

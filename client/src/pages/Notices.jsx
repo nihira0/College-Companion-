@@ -85,7 +85,7 @@ export const Notices = () => {
           >
             <div className="flex items-start justify-between gap-4 mb-3">
               <div>
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
                   {notice.urgent && (
                     <span className="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-600 dark:text-rose-400 font-bold text-[10px] flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" /> URGENT

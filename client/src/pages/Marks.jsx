@@ -34,39 +34,39 @@ export const Marks = () => {
       </div>
 
       {/* Overview Metric Banner */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="glass-card rounded-3xl p-6 border border-purple-500/30 flex items-center gap-5 shadow-lg">
-          <div className="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl font-bold">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+        <div className="glass-card rounded-3xl p-5 sm:p-6 border border-purple-500/30 flex items-center gap-3.5 sm:gap-5 shadow-lg">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl sm:text-2xl font-bold shrink-0">
             8.24
           </div>
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Cumulative CGPA</span>
-            <h3 className="font-poppins font-black text-2xl text-slate-800 dark:text-slate-100">8.24 / 10.0</h3>
-            <p className="text-[11px] text-emerald-500 font-semibold flex items-center gap-1 mt-0.5">
-              <TrendingUp className="w-3 h-3" /> Top 10% of Batch
+          <div className="min-w-0 flex-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block truncate">Cumulative CGPA</span>
+            <h3 className="font-poppins font-black text-xl sm:text-2xl text-slate-800 dark:text-slate-100 truncate">8.24 / 10.0</h3>
+            <p className="text-[11px] text-emerald-500 font-semibold flex items-center gap-1 mt-0.5 truncate">
+              <TrendingUp className="w-3 h-3 shrink-0" /> Top 10% of Batch
             </p>
           </div>
         </div>
 
-        <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 flex items-center gap-5 shadow-lg">
-          <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl font-bold">
+        <div className="glass-card rounded-3xl p-5 sm:p-6 border border-emerald-500/30 flex items-center gap-3.5 sm:gap-5 shadow-lg">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl sm:text-2xl font-bold shrink-0">
             8.55
           </div>
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Target Sem 6 SGPA</span>
-            <h3 className="font-poppins font-black text-2xl text-slate-800 dark:text-slate-100">8.55 SGPA</h3>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Estimated based on midterms</p>
+          <div className="min-w-0 flex-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block truncate">Target Sem 6 SGPA</span>
+            <h3 className="font-poppins font-black text-xl sm:text-2xl text-slate-800 dark:text-slate-100 truncate">8.55 SGPA</h3>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">Estimated based on midterms</p>
           </div>
         </div>
 
-        <div className="glass-card rounded-3xl p-6 border border-amber-500/30 flex items-center gap-5 shadow-lg">
-          <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl font-bold">
+        <div className="glass-card rounded-3xl p-5 sm:p-6 border border-amber-500/30 flex items-center gap-3.5 sm:gap-5 shadow-lg sm:col-span-2 md:col-span-1">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl sm:text-2xl font-bold shrink-0">
             138
           </div>
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Credits Completed</span>
-            <h3 className="font-poppins font-black text-2xl text-slate-800 dark:text-slate-100">138 Credits</h3>
-            <p className="text-[11px] text-amber-600 dark:text-amber-400 font-semibold mt-0.5">Degree completion: 82%</p>
+          <div className="min-w-0 flex-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block truncate">Credits Completed</span>
+            <h3 className="font-poppins font-black text-xl sm:text-2xl text-slate-800 dark:text-slate-100 truncate">138 Credits</h3>
+            <p className="text-[11px] text-amber-600 dark:text-amber-400 font-semibold mt-0.5 truncate">Degree completion: 82%</p>
           </div>
         </div>
       </div>

@@ -72,14 +72,14 @@ export const Timetable = () => {
             transition={{ delay: idx * 0.1 }}
             className="glass-card rounded-3xl p-5 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4"
           >
-            <div className="flex items-start md:items-center gap-4">
-              <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-poppins font-bold text-xs shrink-0 flex items-center gap-1.5">
-                <Clock className="w-4 h-4" />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+              <div className="p-2.5 sm:p-3 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-poppins font-bold text-xs shrink-0 flex items-center gap-1.5 self-start">
+                <Clock className="w-4 h-4 shrink-0" />
                 {slot.time}
               </div>
 
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <h3 className="font-poppins font-bold text-sm text-slate-800 dark:text-slate-100">
                     {slot.subject}
                   </h3>
@@ -87,9 +87,9 @@ export const Timetable = () => {
                     {slot.code}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-3">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span className="flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-emerald-500" /> {slot.room}
+                    <MapPin className="w-3.5 h-3.5 text-emerald-500 shrink-0" /> {slot.room}
                   </span>
                   <span>• Instructor: {slot.professor}</span>
                 </p>

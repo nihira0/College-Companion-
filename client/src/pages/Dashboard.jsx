@@ -170,9 +170,9 @@ export const Dashboard = () => {
               </span>
             </div>
 
-            <div className="flex items-center gap-6 my-2">
+            <div className="flex items-center gap-3 sm:gap-6 my-2">
               {/* Radial gauge */}
-              <div className="relative w-20 h-20 flex items-center justify-center shrink-0">
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center shrink-0">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                   <path
                     className="text-slate-200 dark:text-slate-800"
@@ -191,17 +191,17 @@ export const Dashboard = () => {
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   />
                 </svg>
-                <span className="absolute font-poppins font-extrabold text-sm text-slate-800 dark:text-slate-100">
+                <span className="absolute font-poppins font-extrabold text-xs sm:text-sm text-slate-800 dark:text-slate-100">
                   78%
                 </span>
               </div>
 
-              <div>
+              <div className="min-w-0 flex-1">
                 <p className="text-xs text-slate-500 dark:text-slate-400">Overall Attendance</p>
                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200 font-poppins mt-0.5">
                   78% (108/139)
                 </p>
-                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1 font-medium">
+                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1 font-medium leading-tight">
                   You need 2 more classes to reach safe zone threshold.
                 </p>
               </div>

@@ -70,8 +70,8 @@ export const Attendance = () => {
 
       {/* Summary Banner */}
       <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-        <div className="flex items-center gap-5">
-          <div className="relative w-24 h-24 flex items-center justify-center shrink-0">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4">
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center shrink-0">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
               <path
                 className="text-slate-200 dark:text-slate-800"
@@ -90,14 +90,14 @@ export const Attendance = () => {
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
               />
             </svg>
-            <span className="absolute font-poppins font-black text-xl text-slate-800 dark:text-slate-100">
+            <span className="absolute font-poppins font-black text-lg sm:text-xl text-slate-800 dark:text-slate-100">
               {overallPct}%
             </span>
           </div>
 
           <div>
-            <div className="flex items-center gap-2">
-              <h2 className="font-poppins font-bold text-lg text-slate-800 dark:text-slate-100">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <h2 className="font-poppins font-bold text-base sm:text-lg text-slate-800 dark:text-slate-100">
                 Overall Attendance: {overallPct}%
               </h2>
               {overallPct >= 75 ? (

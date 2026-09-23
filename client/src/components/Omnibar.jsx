@@ -52,12 +52,12 @@ export const Omnibar = ({ isOpen, onClose }) => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-slate-950/60 backdrop-blur-md">
+      <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 sm:pt-20 px-3 sm:px-4 bg-slate-950/60 backdrop-blur-md">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: -20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -20 }}
-          className="w-full max-w-xl glass-card rounded-3xl overflow-hidden shadow-2xl border border-white/20 dark:border-slate-700/50"
+          className="w-full max-w-xl max-h-[85vh] flex flex-col glass-card rounded-3xl overflow-hidden shadow-2xl border border-white/20 dark:border-slate-700/50"
         >
           {/* Input Header */}
           <div className="flex items-center px-5 py-4 border-b border-slate-200/40 dark:border-slate-800/50 gap-3">
