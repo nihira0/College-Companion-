@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import { FormattedMessage } from './FormattedMessage';
 import { Bot, X, Send, Sparkles, Zap, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -63,12 +64,17 @@ export const FloatingSageDrawer = () => {
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
+      const historyPayload = messages.slice(-8).map(m => ({
+        sender: m.sender,
+        text: m.text
+      }));
+
       let res;
       try {
         res = await fetch('/api/ai/chat', {
           method: 'POST',
           headers,
-          body: JSON.stringify({ message: queryText })
+          body: JSON.stringify({ message: queryText, history: historyPayload })
         });
         if (!res.ok && res.status === 404) {
           throw new Error('Relative API 404');
@@ -77,7 +83,7 @@ export const FloatingSageDrawer = () => {
         res = await fetch('http://localhost:5000/api/ai/chat', {
           method: 'POST',
           headers,
-          body: JSON.stringify({ message: queryText })
+          body: JSON.stringify({ message: queryText, history: historyPayload })
         });
       }
       const data = await res.json();
@@ -189,7 +195,7 @@ export const FloatingSageDrawer = () => {
                         </div>
                       )}
 
-                      <p className="whitespace-pre-line">{msg.text}</p>
+                      <FormattedMessage content={msg.text} />
 
                       {/* Web Sources & Citations */}
                       {msg.sources && msg.sources.length > 0 && (

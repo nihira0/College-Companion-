@@ -132,6 +132,91 @@ const getNotices = async (req, res) => {
   res.json(mockNotices);
 };
 
+const createNotice = async (req, res) => {
+  const { title, category, content, urgent } = req.body;
+  if (!title || !content) {
+    return res.status(400).json({ message: 'Title and content are required' });
+  }
+
+  const newNotice = {
+    id: `not_${Date.now()}`,
+    title,
+    date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+    category: category || 'General',
+    content,
+    urgent: Boolean(urgent)
+  };
+
+  try {
+    const item = new Notice(newNotice);
+    await item.save();
+    return res.status(201).json(item);
+  } catch (e) {
+    mockNotices.unshift(newNotice);
+    return res.status(201).json(newNotice);
+  }
+};
+
+const createMark = async (req, res) => {
+  const { studentId, subject, score, maxScore, type, semester } = req.body;
+  if (!subject || score === undefined) {
+    return res.status(400).json({ message: 'Subject and score are required' });
+  }
+
+  const newMark = {
+    id: `mark_${Date.now()}`,
+    userId: studentId || 'user_demo_123',
+    subject,
+    score: Number(score),
+    maxScore: Number(maxScore) || 100,
+    type: type || 'Midterm 1',
+    semester: Number(semester) || 6
+  };
+
+  try {
+    const item = new Mark(newMark);
+    await item.save();
+    return res.status(201).json(item);
+  } catch (e) {
+    mockMarks.unshift(newMark);
+    return res.status(201).json(newMark);
+  }
+};
+
+const getReports = async (req, res) => {
+  const userRole = req.user?.role || 'student';
+  if (userRole === 'student') {
+    return res.status(403).json({ message: 'You do not have permission to perform this action.' });
+  }
+
+  if (userRole === 'faculty') {
+    return res.json({
+      reportType: 'Faculty Class Analytics',
+      assignedSubjects: ['Database Systems', 'Computer Networks'],
+      averageAttendance: '81%',
+      totalStudentsTaught: 124,
+      pendingGradingCount: 18,
+      classPerformance: [
+        { subject: 'DBMS', avgScore: '84%', attendanceAvg: '87%' },
+        { subject: 'Computer Networks', avgScore: '78%', attendanceAvg: '73%' }
+      ]
+    });
+  }
+
+  return res.json({
+    reportType: 'Institutional Academic Summary',
+    totalStudents: 1420,
+    totalFaculty: 86,
+    overallAttendanceAvg: '83.4%',
+    activeCourses: 32,
+    departmentPerformance: [
+      { dept: 'Computer Science', avgCGPA: 8.24, attendance: '84%' },
+      { dept: 'Information Tech', avgCGPA: 8.12, attendance: '82%' },
+      { dept: 'Electronics', avgCGPA: 7.95, attendance: '81%' }
+    ]
+  });
+};
+
 // Notes
 const getNotes = async (req, res) => {
   try {
@@ -472,11 +557,14 @@ module.exports = {
   getAttendance,
   updateAttendance,
   getMarks,
+  createMark,
   getNotices,
+  createNotice,
   getNotes,
   createNote,
   getReminders,
   toggleReminder,
+  getReports,
   getAttendanceInternal,
   getAssignmentsInternal,
   getMarksInternal,

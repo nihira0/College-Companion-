@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
-import { User, Mail, Lock, ArrowRight, Sparkles } from 'lucide-react';
+import { User, Mail, Lock, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const Register = () => {
@@ -20,6 +20,8 @@ export const Register = () => {
     if (result.success) {
       addToast(`Welcome ${name}! Account registered successfully 🌿`, 'success', '🌱');
       navigate('/');
+    } else {
+      addToast(result.message || 'Registration failed', 'error', '⚠️');
     }
   };
 
@@ -91,9 +93,9 @@ export const Register = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-poppins font-semibold text-xs shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all"
+            className="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-poppins font-semibold text-xs shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
           >
-            Create Account & Get Started
+            {loading ? 'Creating account...' : 'Create Account & Get Started'}
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>

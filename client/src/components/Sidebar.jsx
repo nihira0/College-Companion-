@@ -21,14 +21,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 export const Sidebar = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
 
+  const userRole = user?.role || 'student';
+
   const navItems = [
     { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+    ...(userRole === 'admin' ? [{ path: '/users', label: 'User Directory', icon: User }] : []),
     { path: '/assignments', label: 'Assignments', icon: FileText },
     { path: '/attendance', label: 'Attendance', icon: PieChart },
     { path: '/marks', label: 'Marks', icon: GraduationCap },
     { path: '/timetable', label: 'Timetable', icon: Calendar },
     { path: '/notices', label: 'Notices', icon: Bell },
     { path: '/notes', label: 'Notes', icon: BookOpen },
+    ...(userRole === 'faculty' || userRole === 'admin' ? [{ path: '/reports', label: 'Reports', icon: Sparkles }] : []),
     { path: '/pomodoro', label: 'Pomodoro', icon: Timer },
     { path: '/sage', label: 'AI Assistant', icon: Bot, badge: 'Sage 🌿' }
   ];
@@ -133,9 +137,14 @@ export const Sidebar = ({ isOpen, onClose }) => {
               {user?.avatar || '🌱'}
             </div>
             <div className="truncate">
-              <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
-                {user?.name || 'Nihaarika'}
-              </p>
+              <div className="flex items-center gap-1">
+                <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
+                  {user?.name || 'Nihaarika'}
+                </p>
+                <span className="px-1.5 py-0.2 text-[9px] font-extrabold uppercase rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-300">
+                  {user?.role || 'student'}
+                </span>
+              </div>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
                 {user?.course || 'B.Tech CS'}
               </p>

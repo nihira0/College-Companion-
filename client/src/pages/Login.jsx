@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
-import { Lock, Mail, ArrowRight, Sparkles } from 'lucide-react';
+import { Lock, Mail, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const Login = () => {
@@ -10,15 +10,36 @@ export const Login = () => {
   const { addToast } = useNotification();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('nihaarika@college.edu');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberEmail, setRememberEmail] = useState(false);
+  const [keepLoggedIn, setKeepLoggedIn] = useState(true);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('college_companion_remembered_email');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberEmail(true);
+    } else {
+      setEmail('nihaarika@college.edu');
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await login(email, password);
+
+    if (rememberEmail) {
+      localStorage.setItem('college_companion_remembered_email', email);
+    } else {
+      localStorage.removeItem('college_companion_remembered_email');
+    }
+
+    const result = await login(email, password, keepLoggedIn);
     if (result.success) {
       addToast('Welcome back to College Companion! 🌿', 'success', '👋');
       navigate('/');
+    } else {
+      addToast(result.message || 'Invalid login credentials', 'error', '⚠️');
     }
   };
 
@@ -72,12 +93,35 @@ export const Login = () => {
             </div>
           </div>
 
+          {/* Options: Remember Email & Keep Me Logged In */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1 text-[11px] text-slate-600 dark:text-slate-300">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={rememberEmail}
+                onChange={(e) => setRememberEmail(e.target.checked)}
+                className="w-3.5 h-3.5 rounded text-emerald-500 focus:ring-emerald-400 border-slate-300"
+              />
+              <span>Remember email</span>
+            </label>
+
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={keepLoggedIn}
+                onChange={(e) => setKeepLoggedIn(e.target.checked)}
+                className="w-3.5 h-3.5 rounded text-emerald-500 focus:ring-emerald-400 border-slate-300"
+              />
+              <span>Keep me logged in</span>
+            </label>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-poppins font-semibold text-xs shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all"
+            className="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-poppins font-semibold text-xs shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
           >
-            Sign In to Dashboard
+            {loading ? 'Signing in...' : 'Sign In to Dashboard'}
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>

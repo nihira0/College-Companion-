@@ -1,13 +1,16 @@
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'college_companion_super_secret_key_2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'college_companion_leafy_secret_key_2026';
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+  let token = req.header('Authorization')?.replace('Bearer ', '');
+
+  if (!token && req.cookies?.token) {
+    token = req.cookies.token;
+  }
 
   if (!token) {
-    req.user = { id: 'user_demo_123', name: 'Nihaarika', email: 'nihaarika@college.edu' };
-    return next();
+    return res.status(401).json({ message: 'Authentication required. Access denied.' });
   }
 
   try {
@@ -15,11 +18,24 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    // Graceful fallback for demo tokens in client state
-    req.user = { id: 'user_demo_123', name: 'Nihaarika', email: 'nihaarika@college.edu' };
-    next();
+    return res.status(401).json({ message: 'Invalid or expired authentication session.' });
   }
 };
 
-module.exports = { authMiddleware, JWT_SECRET };
+const requireRole = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Authentication required. Access denied.' });
+    }
 
+    const userRole = req.user.role || 'student';
+
+    if (!allowedRoles.includes(userRole)) {
+      return res.status(403).json({ message: 'You do not have permission to perform this action.' });
+    }
+
+    next();
+  };
+};
+
+module.exports = { authMiddleware, requireRole, JWT_SECRET };

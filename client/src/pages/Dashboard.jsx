@@ -82,11 +82,20 @@ export const Dashboard = () => {
         className="flex flex-col md:flex-row md:items-center justify-between gap-4"
       >
         <div>
-          <h1 className="font-poppins font-extrabold text-2xl md:text-3xl tracking-tight text-slate-800 dark:text-slate-100 flex items-center gap-3">
-            <span>{greeting.icon}</span> {greeting.salutation}, {user?.name || 'Nihaarika'}!
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="font-poppins font-extrabold text-2xl md:text-3xl tracking-tight text-slate-800 dark:text-slate-100 flex items-center gap-3">
+              <span>{greeting.icon}</span> {greeting.salutation}, {user?.name || 'User'}!
+            </h1>
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+              {user?.role || 'student'}
+            </span>
+          </div>
           <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mt-1 font-poppins">
-            {greeting.message}
+            {user?.role === 'admin' 
+              ? 'Institutional Admin Portal • System Overview & User Management'
+              : user?.role === 'faculty'
+              ? 'Faculty Portal • Class Overview, Attendance Entry & Grading'
+              : greeting.message}
           </p>
         </div>
 

@@ -9,6 +9,7 @@ import { Navbar } from './components/Navbar';
 import { Omnibar } from './components/Omnibar';
 import { ToastContainer } from './components/ToastContainer';
 import { FloatingSageDrawer } from './components/FloatingSageDrawer';
+import { RoleRoute } from './components/RoleRoute';
 
 // Pages
 import { Dashboard } from './pages/Dashboard';
@@ -22,11 +23,24 @@ import { Pomodoro } from './pages/Pomodoro';
 import { SageAI } from './pages/SageAI';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { UserManagement } from './pages/UserManagement';
+import { Reports } from './pages/Reports';
 
 const Layout = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [isOmnibarOpen, setIsOmnibarOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-poppins text-xs font-semibold">
+          <span className="w-4 h-4 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
+          Loading College Companion...
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -59,7 +73,7 @@ const Layout = ({ children }) => {
       {/* Mobile Floating Sage AI Assistant Drawer (< 768px) */}
       <FloatingSageDrawer />
 
-      {/* Main Content View Container with Apple-style Breathing Room (9.8/10 spacing) */}
+      {/* Main Content View Container */}
       <main className="px-4 md:pl-72 md:pr-5 pt-24 md:pt-28 pb-10 min-h-screen relative z-10">
         <div className="max-w-7xl mx-auto">
           {children}
@@ -88,6 +102,28 @@ export default function App() {
               <Route path="/notes" element={<Layout><Notes /></Layout>} />
               <Route path="/pomodoro" element={<Layout><Pomodoro /></Layout>} />
               <Route path="/sage" element={<Layout><SageAI /></Layout>} />
+
+              {/* Role Protected Routes */}
+              <Route 
+                path="/reports" 
+                element={
+                  <Layout>
+                    <RoleRoute allowedRoles={['faculty', 'admin']}>
+                      <Reports />
+                    </RoleRoute>
+                  </Layout>
+                } 
+              />
+              <Route 
+                path="/users" 
+                element={
+                  <Layout>
+                    <RoleRoute allowedRoles={['admin']}>
+                      <UserManagement />
+                    </RoleRoute>
+                  </Layout>
+                } 
+              />
 
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
