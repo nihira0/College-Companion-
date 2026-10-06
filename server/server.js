@@ -27,6 +27,17 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'College Companion Server is healthy 🌿' });
 });
 
+// Serve Static React Frontend Build in Production / Render
+const clientDistPath = path.join(__dirname, '../client/dist');
+app.use(express.static(clientDistPath));
+
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ message: 'API route not found' });
+  }
+  res.sendFile(path.join(clientDistPath, 'index.html'));
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 College Companion Server listening on port ${PORT}`);
 });
