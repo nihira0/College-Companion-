@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
-import { PieChart, Plus, Minus, ShieldCheck, AlertTriangle, Calculator, Sparkles } from 'lucide-react';
+import { PieChart, ShieldCheck, AlertTriangle, Calculator, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const Attendance = () => {
@@ -41,44 +41,6 @@ export const Attendance = () => {
     };
     fetchAttendance();
   }, [token]);
-
-  const handleUpdate = async (id, deltaAttended, deltaTotal) => {
-    let updatedAttended = 0;
-    let updatedTotal = 0;
-
-    setSubjects(prev => prev.map(sub => {
-      if (sub.id === id || sub._id === id) {
-        const newAttended = Math.max(0, sub.attended + deltaAttended);
-        const newTotal = Math.max(newAttended, sub.total + deltaTotal);
-        updatedAttended = newAttended;
-        updatedTotal = newTotal;
-        const newPct = Math.round((newAttended / (newTotal || 1)) * 100);
-        addToast(
-          isFacultyOrAdmin 
-            ? `Updated ${sub.name}: ${newPct}% attendance (Saved to Backend)` 
-            : `Simulator ${sub.name}: ${newPct}% attendance`,
-          'info',
-          '📊'
-        );
-        return { ...sub, attended: newAttended, total: newTotal };
-      }
-      return sub;
-    }));
-
-    if (isFacultyOrAdmin) {
-      try {
-        const headers = {
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-        };
-        await fetch(`/api/academic/attendance/${id}`, {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify({ attended: updatedAttended, total: updatedTotal })
-        });
-      } catch (e) {}
-    }
-  };
 
   const calculateStatus = (attended, total, target = 75) => {
     const pct = Math.round((attended / (total || 1)) * 100);
@@ -212,12 +174,12 @@ export const Attendance = () => {
       <div>
         <h1 className="font-poppins font-extrabold text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-3">
           <span className="p-2 rounded-2xl bg-emerald-500/10 text-emerald-500">📊</span>
-          {isFacultyOrAdmin ? 'Faculty Attendance Management' : 'Attendance & Safe-Zone Tracker'}
+          {isFacultyOrAdmin ? 'Faculty Attendance Management' : 'Attendance & Safe-Zone Dashboard'}
         </h1>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-poppins">
           {isFacultyOrAdmin 
             ? 'Faculty Workstation • Record official daily attendance for your assigned IT divisions.'
-            : 'Monitor your academic attendance percentages, simulate bunk allowances, and maintain safety thresholds.'}
+            : 'Monitor your official academic attendance percentages maintained by assigned faculty.'}
         </p>
       </div>
 
@@ -379,9 +341,9 @@ export const Attendance = () => {
             </div>
 
             <div className="p-4 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 text-xs font-poppins space-y-1">
-              <span className="font-bold text-slate-800 dark:text-slate-200 block">💡 Smart Advice:</span>
+              <span className="font-bold text-slate-800 dark:text-slate-200 block">💡 Official Attendance Record:</span>
               <p className="text-slate-600 dark:text-slate-300">
-                Keep attendance above 75% for hall ticket eligibility. Use buttons below to simulate bunk allowances.
+                Official attendance records maintained by assigned faculty. Attendance above 75% required for exam hall ticket eligibility.
               </p>
             </div>
           </div>
@@ -423,27 +385,11 @@ export const Attendance = () => {
                       <span>Target: {sub.target}%</span>
                     </div>
 
-                    <div className={`p-3 rounded-2xl text-[11px] font-medium my-3 ${
+                    <div className={`p-3 rounded-2xl text-[11px] font-medium mt-3 ${
                       status.isSafe ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
                     }`}>
                       {status.message}
                     </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex items-center gap-2 pt-3 border-t border-slate-200/30 dark:border-slate-800/40">
-                    <button
-                      onClick={() => handleUpdate(sub.id || sub._id, 1, 1)}
-                      className="flex-1 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 dark:text-emerald-300 font-poppins text-xs font-semibold flex items-center justify-center gap-1.5 transition-all"
-                    >
-                      <Plus className="w-3.5 h-3.5" /> + Attended
-                    </button>
-                    <button
-                      onClick={() => handleUpdate(sub.id || sub._id, 0, 1)}
-                      className="flex-1 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-600 dark:text-rose-400 font-poppins text-xs font-semibold flex items-center justify-center gap-1.5 transition-all"
-                    >
-                      <Minus className="w-3.5 h-3.5" /> - Missed
-                    </button>
                   </div>
                 </motion.div>
               );
