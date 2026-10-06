@@ -23,8 +23,11 @@ import { Pomodoro } from './pages/Pomodoro';
 import { SageAI } from './pages/SageAI';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
-import { UserManagement } from './pages/UserManagement';
+import { AdminDashboard } from './pages/AdminDashboard';
+import { StudentFees } from './pages/StudentFees';
 import { Reports } from './pages/Reports';
+import { FacultyClasses } from './pages/FacultyClasses';
+import { Settings } from './pages/Settings';
 
 const Layout = ({ children }) => {
   const { user, loading } = useAuth();
@@ -94,14 +97,17 @@ export default function App() {
               <Route path="/register" element={<Register />} />
 
               <Route path="/" element={<Layout><Dashboard /></Layout>} />
+              <Route path="/classes" element={<Layout><FacultyClasses /></Layout>} />
               <Route path="/assignments" element={<Layout><Assignments /></Layout>} />
               <Route path="/attendance" element={<Layout><Attendance /></Layout>} />
               <Route path="/marks" element={<Layout><Marks /></Layout>} />
               <Route path="/timetable" element={<Layout><Timetable /></Layout>} />
               <Route path="/notices" element={<Layout><Notices /></Layout>} />
               <Route path="/notes" element={<Layout><Notes /></Layout>} />
+              <Route path="/fees" element={<Layout><StudentFees /></Layout>} />
               <Route path="/pomodoro" element={<Layout><Pomodoro /></Layout>} />
               <Route path="/sage" element={<Layout><SageAI /></Layout>} />
+              <Route path="/settings" element={<Layout><Settings /></Layout>} />
 
               {/* Role Protected Routes */}
               <Route 
@@ -115,11 +121,21 @@ export default function App() {
                 } 
               />
               <Route 
+                path="/admin" 
+                element={
+                  <Layout>
+                    <RoleRoute allowedRoles={['admin']}>
+                      <AdminDashboard />
+                    </RoleRoute>
+                  </Layout>
+                } 
+              />
+              <Route 
                 path="/users" 
                 element={
                   <Layout>
                     <RoleRoute allowedRoles={['admin']}>
-                      <UserManagement />
+                      <AdminDashboard />
                     </RoleRoute>
                   </Layout>
                 } 

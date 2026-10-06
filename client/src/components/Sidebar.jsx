@@ -12,8 +12,11 @@ import {
   Bot,
   Sparkles,
   User,
+  Settings,
   LogOut,
-  X
+  X,
+  CreditCard,
+  Shield
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -23,19 +26,46 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
   const userRole = user?.role || 'student';
 
-  const navItems = [
-    { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-    ...(userRole === 'admin' ? [{ path: '/users', label: 'User Directory', icon: User }] : []),
-    { path: '/assignments', label: 'Assignments', icon: FileText },
-    { path: '/attendance', label: 'Attendance', icon: PieChart },
-    { path: '/marks', label: 'Marks', icon: GraduationCap },
-    { path: '/timetable', label: 'Timetable', icon: Calendar },
-    { path: '/notices', label: 'Notices', icon: Bell },
-    { path: '/notes', label: 'Notes', icon: BookOpen },
-    ...(userRole === 'faculty' || userRole === 'admin' ? [{ path: '/reports', label: 'Reports', icon: Sparkles }] : []),
-    { path: '/pomodoro', label: 'Pomodoro', icon: Timer },
-    { path: '/sage', label: 'AI Assistant', icon: Bot, badge: 'Sage 🌿' }
-  ];
+  let navItems = [];
+
+  if (userRole === 'faculty') {
+    navItems = [
+      { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/classes', label: 'My Classes', icon: User },
+      { path: '/assignments', label: 'Assignments', icon: FileText },
+      { path: '/attendance', label: 'Attendance', icon: PieChart },
+      { path: '/marks', label: 'Marks', icon: GraduationCap },
+      { path: '/timetable', label: 'Timetable', icon: Calendar },
+      { path: '/notices', label: 'Notices', icon: Bell },
+      { path: '/notes', label: 'Resources', icon: BookOpen },
+      { path: '/reports', label: 'Reports', icon: Sparkles },
+      { path: '/sage', label: 'Sage AI', icon: Bot, badge: 'Sage 🌿' },
+      { path: '/settings', label: 'Settings', icon: Settings }
+    ];
+  } else if (userRole === 'admin') {
+    navItems = [
+      { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/admin', label: 'Admin Portal', icon: Shield, badge: 'Admin ⚙️' },
+      { path: '/notices', label: 'Notices', icon: Bell },
+      { path: '/reports', label: 'Reports', icon: Sparkles },
+      { path: '/settings', label: 'Settings', icon: Settings }
+    ];
+  } else {
+    // Student navigation
+    navItems = [
+      { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/assignments', label: 'Assignments', icon: FileText },
+      { path: '/attendance', label: 'Attendance', icon: PieChart },
+      { path: '/marks', label: 'Marks', icon: GraduationCap },
+      { path: '/fees', label: 'Fee Management', icon: CreditCard },
+      { path: '/timetable', label: 'Timetable', icon: Calendar },
+      { path: '/notices', label: 'Notices', icon: Bell },
+      { path: '/notes', label: 'Notes', icon: BookOpen },
+      { path: '/pomodoro', label: 'Pomodoro', icon: Timer },
+      { path: '/sage', label: 'AI Assistant', icon: Bot, badge: 'Sage 🌿' },
+      { path: '/settings', label: 'Settings', icon: Settings }
+    ];
+  }
 
   const sidebarContent = (
     <>
@@ -115,46 +145,41 @@ export const Sidebar = ({ isOpen, onClose }) => {
         </nav>
       </div>
 
-      {/* Footer Profile & Companion Status Card */}
-      <div className="space-y-3 pt-3 border-t border-slate-200/40 dark:border-slate-800/50">
-        {/* Mini Leafy Companion Quote */}
-        <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 text-xs flex items-center gap-2.5">
-          <div className="text-xl animate-bounce">🌿</div>
+      {/* Footer Profile & Companion Status Section */}
+      <div className="space-y-2.5 pt-3 border-t border-slate-200/40 dark:border-slate-800/50">
+        {/* Mini Leafy Companion Quote Card */}
+        <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 text-xs flex items-center gap-2.5 shadow-sm">
+          <div className="text-xl shrink-0">🌿</div>
           <div>
-            <p className="font-semibold text-slate-800 dark:text-slate-200 text-[11px]">
+            <p className="font-poppins font-bold text-slate-800 dark:text-slate-200 text-[11px] leading-tight">
               Stay productive!
             </p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400">
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium leading-tight">
               You've got this! ✨
             </p>
           </div>
         </div>
 
-        {/* User Card */}
-        <div className="flex items-center justify-between px-2 py-1">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-full bg-emerald-200 dark:bg-emerald-900/60 flex items-center justify-center text-sm font-bold text-emerald-800 dark:text-emerald-300 shrink-0">
-              {user?.avatar || '🌱'}
+        {/* User Profile & Logout Card (Picture 2 UI/UX) */}
+        <div className="p-2.5 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 dark:border-slate-700/40 shadow-sm hover:bg-white/60 dark:hover:bg-slate-800/60 transition-all flex items-center justify-between gap-2.5 group">
+          <NavLink to="/settings" onClick={onClose} className="flex items-center gap-2.5 min-w-0 flex-1">
+            <div className="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-sm font-bold text-emerald-700 dark:text-emerald-300 shrink-0 shadow-sm">
+              🌿
             </div>
-            <div className="truncate">
-              <div className="flex items-center gap-1">
-                <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
-                  {user?.name || 'Nihaarika'}
-                </p>
-                <span className="px-1.5 py-0.2 text-[9px] font-extrabold uppercase rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-300">
-                  {user?.role || 'student'}
-                </span>
-              </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                {user?.course || 'B.Tech CS'}
+            <div className="min-w-0 flex-1">
+              <h4 className="font-poppins font-bold text-xs text-slate-800 dark:text-slate-100 truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                {user?.name || user?.email?.split('@')[0] || 'nihirashitap'}
+              </h4>
+              <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400 truncate">
+                {user?.department || (user?.role === 'faculty' ? 'Faculty • IT Department' : user?.role === 'admin' ? 'Administrator' : 'B.Tech Computer Science')}
               </p>
             </div>
-          </div>
+          </NavLink>
 
           <button
             onClick={logout}
             title="Logout"
-            className="p-1.5 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+            className="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-all shrink-0"
           >
             <LogOut className="w-4 h-4" />
           </button>

@@ -9,9 +9,13 @@ const UserSchema = new mongoose.Schema({
     enum: ['student', 'faculty', 'admin'], 
     default: 'student' 
   },
+  designation: { type: String, default: '' },
   avatar: { type: String, default: '🌿' },
-  course: { type: String, default: 'B.Tech Computer Science' },
+  course: { type: String, default: 'B.Tech Information Technology' },
   semester: { type: Number, default: 6 },
+  departmentId: { type: String, default: 'dept_it_1' },
+  divisionId: { type: String, default: 'div_ita_1' },
+  rollNo: { type: String, default: 'IT-2026-001' },
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 

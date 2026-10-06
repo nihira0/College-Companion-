@@ -6,13 +6,11 @@ const {
   generateQuiz,
   explainConcept
 } = require('../controllers/aiController');
-const { authMiddleware } = require('../middleware/auth');
+const { authMiddleware, optionalAuth } = require('../middleware/auth');
 
-router.use(authMiddleware);
-
-router.post('/chat', handleSageChat);
-router.post('/flashcards', generateFlashcards);
-router.post('/quiz', generateQuiz);
-router.post('/explain', explainConcept);
+router.post('/chat', optionalAuth, handleSageChat);
+router.post('/flashcards', authMiddleware, generateFlashcards);
+router.post('/quiz', authMiddleware, generateQuiz);
+router.post('/explain', authMiddleware, explainConcept);
 
 module.exports = router;

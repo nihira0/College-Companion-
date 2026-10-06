@@ -62,10 +62,10 @@ export const AuthProvider = ({ children }) => {
     verifySession();
   }, []);
 
-  const login = async (email, password, keepLoggedIn = true) => {
+  const login = async (email, password, keepLoggedIn = true, selectedRole = null) => {
     setLoading(true);
     try {
-      const payload = { email, password, keepLoggedIn };
+      const payload = { email, password, keepLoggedIn, selectedRole };
       let res;
       try {
         res = await fetch('/api/auth/login', {

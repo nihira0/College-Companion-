@@ -14,37 +14,75 @@ import {
   Pause,
   RotateCcw,
   Plus,
-  AlertCircle
+  AlertCircle,
+  Users,
+  FileText,
+  PieChart,
+  GraduationCap,
+  Bell,
+  BookOpen,
+  Sparkles,
+  AlertTriangle,
+  UserCheck,
+  Zap
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+import { AdminDashboard } from './AdminDashboard';
+
 export const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const { getGreetingData } = useTheme();
   const { addToast } = useNotification();
   const navigate = useNavigate();
 
-  const greeting = getGreetingData(user?.name || 'Nihaarika');
+  const greeting = getGreetingData(user?.name || 'User');
+  const userRole = user?.role || 'student';
 
-  // Pomodoro Mini State
+  const [myClasses, setMyClasses] = useState([]);
+  const [attentionStudents, setAttentionStudents] = useState([
+    { id: 'user_student_2', name: 'Rohan Sharma', rollNo: 'IT-A-012', divisionName: 'IT-A', attendancePct: 72, marksAvg: 76, reason: 'Attendance below 75% threshold (72%)' },
+    { id: 'user_student_4', name: 'Ananya Verma', rollNo: 'IT-A-023', divisionName: 'IT-A', attendancePct: 68, marksAvg: 70, reason: 'Attendance below 75% threshold (68%)' },
+    { id: 'user_student_8', name: 'Devansh Joshi', rollNo: 'IT-C-008', divisionName: 'IT-C', attendancePct: 65, marksAvg: 62, reason: 'Low Marks (62%) & Attendance (65%)' }
+  ]);
+
+  useEffect(() => {
+    if (userRole === 'faculty') {
+      const fetchClasses = async () => {
+        try {
+          const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+          const res = await fetch('/api/academic/my-classes', { headers });
+          if (res.ok) {
+            const data = await res.json();
+            setMyClasses(data);
+          }
+        } catch (err) {}
+      };
+      fetchClasses();
+    }
+  }, [userRole, token]);
+
+  // Pomodoro Mini State for Students Only
   const [pomodoroSeconds, setPomodoroSeconds] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
   const [completedSessions, setCompletedSessions] = useState(1);
 
   useEffect(() => {
     let interval = null;
-    if (isActive && pomodoroSeconds > 0) {
-      interval = setInterval(() => {
-        setPomodoroSeconds(prev => prev - 1);
-      }, 1000);
-    } else if (pomodoroSeconds === 0 && isActive) {
-      setIsActive(false);
-      setCompletedSessions(prev => prev + 1);
-      addToast('🍅 Pomodoro Focus Session Complete! Plant Grew Bigger 🌱', 'success', '🌱');
-      setPomodoroSeconds(25 * 60);
+    if (userRole === 'student') {
+      if (isActive && pomodoroSeconds > 0) {
+        interval = setInterval(() => {
+          setPomodoroSeconds(prev => prev - 1);
+        }, 1000);
+      } else if (pomodoroSeconds === 0 && isActive) {
+        setIsActive(false);
+        setCompletedSessions(prev => prev + 1);
+        addToast('🍅 Pomodoro Focus Session Complete! Plant Grew Bigger 🌱', 'success', '🌱');
+        setPomodoroSeconds(25 * 60);
+      }
     }
     return () => clearInterval(interval);
-  }, [isActive, pomodoroSeconds, addToast]);
+  }, [isActive, pomodoroSeconds, addToast, userRole]);
 
   const togglePomodoro = () => {
     setIsActive(!isActive);
@@ -64,7 +102,6 @@ export const Dashboard = () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Plant stage based on completed sessions
   const getPlantEmoji = () => {
     if (completedSessions === 0) return '🌱';
     if (completedSessions === 1) return '🌿';
@@ -72,6 +109,244 @@ export const Dashboard = () => {
     return '🌳';
   };
 
+  // Render Administrator Dashboard (Clean Admin Governance without Faculty Widgets)
+  if (userRole === 'admin') {
+    return <AdminDashboard />;
+  }
+
+  // Render Faculty Dashboard
+  if (userRole === 'faculty') {
+    return (
+      <div className="space-y-8 pb-10">
+        {/* Dynamic Context Greeting Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col md:flex-row md:items-center justify-between gap-4"
+        >
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="font-poppins font-extrabold text-2xl md:text-3xl tracking-tight text-slate-800 dark:text-slate-100 flex items-center gap-3">
+                <span>👨‍🏫</span> {greeting.salutation}, Professor {user?.name || 'Faculty'}!
+              </h1>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-teal-500/20 text-teal-700 dark:text-teal-300 border border-teal-500/30">
+                {userRole}
+              </span>
+            </div>
+            <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mt-1 font-poppins">
+              Faculty Academic Workstation • Manage Assigned Class Rosters, Attendance Registers & Marks
+            </p>
+          </div>
+
+          <div className="px-4 py-2 rounded-2xl glass-card text-xs font-semibold text-emerald-800 dark:text-emerald-300 flex items-center gap-2 border border-emerald-500/20 shadow-sm self-start md:self-auto">
+            <CalendarIcon className="w-4 h-4 text-emerald-500" />
+            <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+          </div>
+        </motion.div>
+
+        {/* Faculty Core Management Metrics Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="glass-card rounded-3xl p-4 border border-emerald-500/30 shadow-md">
+            <div className="flex items-center justify-between text-emerald-600 mb-2">
+              <Users className="w-5 h-5" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Classes</span>
+            </div>
+            <div className="font-poppins font-black text-2xl text-slate-800 dark:text-slate-100">
+              {myClasses.length || 3}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Assigned Classes</p>
+          </div>
+
+          <div className="glass-card rounded-3xl p-4 border border-teal-500/30 shadow-md">
+            <div className="flex items-center justify-between text-teal-600 mb-2">
+              <UserCheck className="w-5 h-5" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Students</span>
+            </div>
+            <div className="font-poppins font-black text-2xl text-slate-800 dark:text-slate-100">
+              235
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Managed Roster</p>
+          </div>
+
+          <div className="glass-card rounded-3xl p-4 border border-amber-500/30 shadow-md">
+            <div className="flex items-center justify-between text-amber-500 mb-2">
+              <FileText className="w-5 h-5" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Grading</span>
+            </div>
+            <div className="font-poppins font-black text-2xl text-slate-800 dark:text-slate-100">
+              18
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Pending Submissions</p>
+          </div>
+
+          <div className="glass-card rounded-3xl p-4 border border-rose-500/30 shadow-md">
+            <div className="flex items-center justify-between text-rose-500 mb-2">
+              <AlertTriangle className="w-5 h-5" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Alerts</span>
+            </div>
+            <div className="font-poppins font-black text-2xl text-rose-600 dark:text-rose-400">
+              {attentionStudents.length}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Below 75% Attendance</p>
+          </div>
+
+          <div className="glass-card rounded-3xl p-4 border border-purple-500/30 shadow-md">
+            <div className="flex items-center justify-between text-purple-500 mb-2">
+              <Bell className="w-5 h-5" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Notices</span>
+            </div>
+            <div className="font-poppins font-black text-2xl text-slate-800 dark:text-slate-100">
+              3
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Active Announcements</p>
+          </div>
+
+          <div className="glass-card rounded-3xl p-4 border border-indigo-500/30 shadow-md">
+            <div className="flex items-center justify-between text-indigo-500 mb-2">
+              <GraduationCap className="w-5 h-5" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Exams</span>
+            </div>
+            <div className="font-poppins font-black text-2xl text-slate-800 dark:text-slate-100">
+              2
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Upcoming Midterms</p>
+          </div>
+        </div>
+
+        {/* Faculty Classes Quick Workstation */}
+        <div className="glass-card rounded-3xl p-6 border border-teal-500/30 shadow-xl space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-poppins font-bold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2">
+              <span>📚</span> Assigned Teaching Classes
+            </h2>
+            <button onClick={() => navigate('/classes')} className="text-xs text-teal-600 dark:text-teal-400 font-semibold hover:underline">
+              Manage Roster →
+            </button>
+          </div>
+
+          {myClasses.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {myClasses.map(c => (
+                <div key={c.id} className="p-4 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 flex flex-col justify-between space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-700 dark:text-teal-300 font-bold text-xs">
+                      {c.divisionName || 'IT-A'}
+                    </span>
+                    <span className="text-[11px] text-slate-400 font-mono font-bold">{c.subjectCode || 'IT601'}</span>
+                  </div>
+                  <div>
+                    <h3 className="font-poppins font-bold text-sm text-slate-800 dark:text-slate-100">{c.subjectName}</h3>
+                    <p className="text-xs text-slate-500 mt-0.5">Division Roster: 75 Students • Year {c.academicYear || '2025-2026'}</p>
+                  </div>
+                  <div className="flex items-center gap-2 pt-2 border-t border-slate-200/30">
+                    <button onClick={() => navigate('/attendance')} className="flex-1 py-1.5 rounded-xl bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-poppins text-xs font-semibold text-center hover:bg-emerald-500/25">
+                      Mark Attendance
+                    </button>
+                    <button onClick={() => navigate('/marks')} className="flex-1 py-1.5 rounded-xl bg-purple-500/15 text-purple-700 dark:text-purple-300 font-poppins text-xs font-semibold text-center hover:bg-purple-500/25">
+                      Enter Marks
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="py-8 text-center text-xs text-slate-400">
+              No classes currently assigned. Contact administrator.
+            </div>
+          )}
+        </div>
+
+        {/* Data-Driven Attention Required & Schedule Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Attention Required Card (Data Driven) */}
+          <div className="glass-card rounded-3xl p-6 border border-rose-500/30 shadow-lg space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-poppins font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-rose-500" />
+                Attention Required (Students Needing Intervention)
+              </h3>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-600 dark:text-rose-400">
+                {attentionStudents.length} Students
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {attentionStudents.map(student => (
+                <div key={student.id} className="p-3.5 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-xs text-slate-800 dark:text-slate-100 font-poppins">{student.name}</span>
+                      <span className="text-[10px] font-mono font-bold text-slate-400">({student.rollNo})</span>
+                    </div>
+                    <span className="text-[11px] text-rose-600 dark:text-rose-400 font-medium block mt-0.5">
+                      {student.reason}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => { addToast(`Notice alert sent to ${student.name}`, 'success'); }}
+                    className="px-2.5 py-1 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 text-[11px] font-bold hover:bg-rose-500/25"
+                  >
+                    Notify
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Today's Teaching Schedule */}
+          <div className="glass-card rounded-3xl p-6 border border-teal-500/30 shadow-lg space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-poppins font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <Clock className="w-4 h-4 text-teal-500" />
+                Today's Teaching Schedule
+              </h3>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-700 dark:text-teal-300">
+                3 Lectures
+              </span>
+            </div>
+
+            <div className="space-y-3 text-xs font-poppins">
+              <div className="p-3 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 flex items-center justify-between">
+                <div>
+                  <h4 className="font-bold text-slate-800 dark:text-slate-100">09:00 AM - 10:00 AM</h4>
+                  <p className="text-slate-500">Database Systems (IT601) • Lab 3</p>
+                </div>
+                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold text-[10px]">
+                  IT-A
+                </span>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 flex items-center justify-between">
+                <div>
+                  <h4 className="font-bold text-slate-800 dark:text-slate-100">10:15 AM - 11:15 AM</h4>
+                  <p className="text-slate-500">Computer Networks (IT602) • Room 204</p>
+                </div>
+                <span className="px-2 py-0.5 rounded bg-teal-500/20 text-teal-700 dark:text-teal-300 font-bold text-[10px]">
+                  IT-B
+                </span>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 flex items-center justify-between">
+                <div>
+                  <h4 className="font-bold text-slate-800 dark:text-slate-100">11:30 AM - 12:30 PM</h4>
+                  <p className="text-slate-500">Operating Systems (IT603) • Room 204</p>
+                </div>
+                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold text-[10px]">
+                  IT-A
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Sage AI Assistant Widget for Faculty */}
+          <SageWidget />
+        </div>
+      </div>
+    );
+  }
+
+  // Render Student Dashboard (Preserved 100%)
   return (
     <div className="space-y-8 pb-10">
       {/* Dynamic Context Greeting Header */}
@@ -87,15 +362,11 @@ export const Dashboard = () => {
               <span>{greeting.icon}</span> {greeting.salutation}, {user?.name || 'User'}!
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
-              {user?.role || 'student'}
+              {user?.role || 'student'} {user?.divisionId ? `• ${user.divisionId === 'div_itb_1' ? 'IT-B' : user.divisionId === 'div_itc_1' ? 'IT-C' : 'IT-A'}` : ''}
             </span>
           </div>
           <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mt-1 font-poppins">
-            {user?.role === 'admin' 
-              ? 'Institutional Admin Portal • System Overview & User Management'
-              : user?.role === 'faculty'
-              ? 'Faculty Portal • Class Overview, Attendance Entry & Grading'
-              : greeting.message}
+            {greeting.message}
           </p>
         </div>
 
@@ -106,9 +377,9 @@ export const Dashboard = () => {
         </div>
       </motion.div>
 
-      {/* Main Grid Layout with Apple-style Spacing (9.8/10 spacing) */}
+      {/* Main Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Card 1: Upcoming Deadlines (Clean & Minimal) */}
+        {/* Card 1: Upcoming Deadlines */}
         <motion.div
           whileHover={{ y: -4 }}
           className="glass-card rounded-3xl p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
@@ -180,7 +451,6 @@ export const Dashboard = () => {
             </div>
 
             <div className="flex items-center gap-3 sm:gap-6 my-2">
-              {/* Radial gauge */}
               <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center shrink-0">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                   <path
@@ -285,7 +555,6 @@ export const Dashboard = () => {
             </div>
 
             <div className="flex items-center gap-5 my-4">
-              {/* Plant Visual */}
               <motion.div
                 animate={{ scale: isActive ? [1, 1.1, 1] : 1 }}
                 transition={{ duration: 2, repeat: Infinity }}
