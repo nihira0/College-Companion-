@@ -7,41 +7,50 @@ import {
   MessageSquare,
   BookOpen,
   BrainCircuit,
-  Lightbulb,
-  Sparkles,
+  Plus,
   Send,
-  CheckCircle2,
-  XCircle,
-  RotateCw,
+  Trash2,
   Zap,
-  Trash2
+  Clock
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+
+const formatChatDate = (dateStr) => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return '';
+  const now = new Date();
+  const diffHours = (now - d) / (1000 * 60 * 60);
+
+  if (diffHours < 24 && d.getDate() === now.getDate()) {
+    return `Today, ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  }
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (d.getDate() === yesterday.getDate() && d.getMonth() === yesterday.getMonth()) {
+    return `Yesterday, ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  }
+  return d.toLocaleDateString([], { day: 'numeric', month: 'short' }) + `, ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+};
 
 const generateLocalFallbackReply = (queryText) => {
   const msgLower = (queryText || '').toLowerCase();
   if (msgLower.includes('attendance') || msgLower.includes('bunk')) {
-    return `Your overall attendance is **82%** (108/131 classes attended).\n\nHere is your subject breakdown:\n• **Database Systems**: 87% (26/30 classes) — Safe Zone 🛡️\n• **Computer Networks**: 73% (22/30 classes) — Attention Needed ⚠️\n• **Operating Systems**: 88% (28/32 classes) — Safe Zone 🛡️\n• **Software Engineering**: 72% (18/25 classes) — Attention Needed ⚠️\n• **Web Technologies Lab**: 100% (14/14 classes) — Safe Zone 🛡️`;
+    return `Your overall attendance is **82.4%** (108/131 classes attended).\n\nSubject Breakdown:\n• **Big Data Analysis**: 86.7% (26/30 classes) — Safe Zone 🛡️\n• **Machine Learning**: 73.3% (22/30 classes) — Attention Needed ⚠️\n• **User Interface Designing**: 87.5% (28/32 classes) — Safe Zone 🛡️\n• **Product Design and Development**: 72.0% (18/25 classes) — Attention Needed ⚠️\n• **DevOps**: 100% (14/14 classes) — Safe Zone 🛡️`;
   }
   if (msgLower.includes('assignment') || msgLower.includes('pending') || msgLower.includes('due')) {
-    return `You have **3 pending assignment(s)**:\n\n• **DBMS Relational Algebra & SQL** (Database Management Systems) — Due: *Tomorrow, 11:59 PM* [Priority: High]\n• **CN Socket Programming Lab Report** (Computer Networks) — Due: *May 18, 2026* [Priority: Medium]\n• **Software Engineering Agile Sprint** (Software Engineering) — Due: *May 25, 2026* [Priority: High]`;
+    return `You have **3 pending assignment(s)**:\n\n• **Big Data Analysis HDFS Lab** — Due: *Tomorrow, 11:59 PM* [Priority: High]\n• **Machine Learning Neural Networks Assignment** — Due: *May 18, 2026* [Priority: Medium]\n• **Product Design Sprint Report** — Due: *May 25, 2026* [Priority: High]`;
   }
   if (msgLower.includes('mark') || msgLower.includes('cgpa') || msgLower.includes('sgpa') || msgLower.includes('score')) {
-    return `Your current Cumulative CGPA is **8.24 / 10.0**.\n\nSemester Breakdown:\n• **DBMS**: 88/100 (88%) — Midterm 1\n• **Computer Networks**: 82/100 (82%) — Midterm 1\n• **Operating Systems**: 91/100 (91%) — Midterm 1\n• **Web Technologies**: 95/100 (95%) — Practical`;
+    return `Your current Cumulative CGPA is **8.24 / 10.0**.\n\nSemester Breakdown:\n• **Big Data Analysis**: 88/100 (88%) — Midterm 1\n• **Machine Learning**: 82/100 (82%) — Midterm 1\n• **User Interface Designing**: 91/100 (91%) — Midterm 1\n• **DevOps**: 95/100 (95%) — Practical`;
   }
   if (msgLower.includes('timetable') || msgLower.includes('schedule') || msgLower.includes('class')) {
-    return `Here is your class schedule for today:\n\n• **09:00 AM - 10:00 AM**: Database Systems (IT601) in Lab 3 (Dr. Anil Vasoya)\n• **10:15 AM - 11:15 AM**: Computer Networks (IT602) in Room 204\n• **11:30 AM - 12:30 PM**: Operating Systems (IT603) in Room 204\n• **02:00 PM - 04:00 PM**: Web Tech Practical Lab in Computer Center 2`;
+    return `Here is your class schedule for today:\n\n• **09:00 AM - 10:30 AM**: Big Data Analysis (IT601) in Lab 221 (Dr. Rajesh S. Bansode)\n• **11:00 AM - 01:00 PM**: Machine Learning Lab (IT602L) in Lab 203\n• **02:00 PM - 03:30 PM**: User Interface Designing (IT603) in Room 518`;
   }
-  if (msgLower.includes('bcnf') || msgLower.includes('normal form') || msgLower.includes('normalization') || msgLower.includes('1nf') || msgLower.includes('2nf') || msgLower.includes('3nf')) {
-    return `**Normalization (NF) in DBMS** organizes database tables to minimize redundancy and prevent anomalies:\n\n• **1NF**: Requires atomic values per column and unique row keys.\n• **2NF**: Eliminates *partial dependencies* (all non-key columns depend on whole candidate key).\n• **3NF**: Eliminates *transitive dependencies* (no non-key attribute depends on another non-key attribute).\n• **BCNF**: Boyce-Codd Normal Form requires that for EVERY functional dependency *X → Y*, **X MUST be a super key**.`;
+  if (msgLower.includes('fee') || msgLower.includes('balance') || msgLower.includes('due date')) {
+    return `Your net fee balance is **₹20,000** for Semester 6 (Total: ₹1,00,000, Scholarship: ₹20,000, Paid: ₹60,000). Due date: April 15, 2026.`;
   }
-  if (msgLower.includes('deadlock') || msgLower.includes('coffman')) {
-    return `**Deadlocks in Operating Systems** occur when processes are permanently blocked waiting for resources held by each other.\n\n**The 4 Coffman Conditions:**\n1. **Mutual Exclusion**: Non-shareable resource.\n2. **Hold and Wait**: Process holding resource requests more.\n3. **No Preemption**: Resources cannot be forcibly taken.\n4. **Circular Wait**: Closed chain of waiting processes.\n\n*Breaking any single condition prevents deadlock!*`;
-  }
-  if (msgLower.includes('tcp') || msgLower.includes('handshake') || msgLower.includes('osi')) {
-    return `**TCP 3-Way Handshake** establishes a reliable connection:\n\n1. **SYN**: Client sends Synchronize packet.\n2. **SYN-ACK**: Server responds with Synchronize-Acknowledge.\n3. **ACK**: Client sends Acknowledge back. Connection established! 🎉`;
-  }
-  return `🌿 **Sage AI Assistant:** I am ready to help you with your college studies! Ask me about your **attendance**, **assignments**, **marks**, **timetable**, or CS concepts like **DBMS Normalization**, **OS Deadlocks**, or **TCP Handshake**! 🌱`;
+  return `Sage is temporarily unable to reach the AI service. Please try again.`;
 };
 
 export const SageAI = () => {
@@ -52,31 +61,114 @@ export const SageAI = () => {
   const { token } = useAuth();
   const messagesEndRef = useRef(null);
 
-  const [selectedSubject, setSelectedSubject] = useState('DBMS');
-
   // Quick Concept Prompts Chips for 1-click real-time answers
   const quickConceptPrompts = [
     { label: 'My Attendance? 📊', query: 'What is my overall attendance?' },
+    { label: 'Big Data HDFS 🗄️', query: 'What is HDFS in Big Data Analysis?' },
+    { label: 'Machine Learning 🤖', query: 'Explain supervised vs unsupervised learning' },
+    { label: 'DevOps CI/CD ⚡', query: 'What is CI/CD pipeline in DevOps?' },
     { label: 'Pending Assignments? 📝', query: 'What assignments do I have pending?' },
     { label: 'Today\'s Timetable? 📅', query: 'What is my timetable for today?' },
-    { label: 'My Marks & CGPA? 🎓', query: 'What is my CGPA and midterm scores?' },
-    { label: 'What is BCNF? 🗄️', query: 'What is BCNF in DBMS?' },
-    { label: 'TCP 3-Way Handshake 📡', query: 'Explain TCP 3-Way Handshake' },
-    { label: 'Coffman Deadlock Conditions 🖥️', query: 'What are Coffman Deadlock Conditions?' },
-    { label: 'Process vs Thread ⚡', query: 'What is the difference between Process and Thread?' }
+    { label: 'My Marks & CGPA? 🎓', query: 'What is my CGPA and midterm scores?' }
   ];
 
-  // Real-time Chat State
+  // Chat & History State
+  const [currentChatId, setCurrentChatId] = useState(null);
+  const [chatsList, setChatsList] = useState([]);
   const [messages, setMessages] = useState([
     {
       id: 1,
       sender: 'Sage',
-      text: "🌿 Good Morning, Nihaarika! I am your real-time academic AI companion Sage 🌿. Ask me about your attendance, assignments, marks, timetable, or any computer science topic!",
+      text: "🌿 Good Morning! I am your real-time academic AI companion Sage 🌿. Ask me about your attendance, assignments, marks, timetable, or any computer science topic!",
       sourceType: 'System'
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+
+  // Fetch Chat History List
+  const fetchUserChats = async () => {
+    try {
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      let res;
+      try {
+        res = await fetch('/api/ai/chats', { headers });
+      } catch (e) {
+        res = await fetch('http://localhost:5000/api/ai/chats', { headers });
+      }
+      if (res && res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) setChatsList(data);
+      }
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    fetchUserChats();
+  }, [token]);
+
+  // Load selected chat history
+  const loadChatHistory = async (chatId) => {
+    try {
+      setCurrentChatId(chatId);
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      let res;
+      try {
+        res = await fetch(`/api/ai/chats/${chatId}`, { headers });
+      } catch (e) {
+        res = await fetch(`http://localhost:5000/api/ai/chats/${chatId}`, { headers });
+      }
+      if (res && res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.messages)) {
+          const formattedMsgs = data.messages.map((m, idx) => ({
+            id: idx + 1,
+            sender: m.sender === 'user' ? 'User' : 'Sage',
+            text: m.text,
+            sourceType: m.sourceType || 'Sage AI',
+            sources: m.sources || []
+          }));
+          setMessages(formattedMsgs.length > 0 ? formattedMsgs : [{
+            id: 1,
+            sender: 'Sage',
+            text: "🌿 Conversation loaded! How can I assist you further?",
+            sourceType: 'System'
+          }]);
+        }
+      }
+    } catch (err) {}
+  };
+
+  // Start New Chat
+  const handleNewChat = () => {
+    setCurrentChatId(null);
+    setMessages([
+      {
+        id: Date.now(),
+        sender: 'Sage',
+        text: "🌿 **New Conversation Started!** Ask me about your attendance, assignments, marks, timetable, or any academic topic!",
+        sourceType: 'System'
+      }
+    ]);
+  };
+
+  // Delete Chat History Item
+  const deleteChat = async (e, chatId) => {
+    e.stopPropagation();
+    try {
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      try {
+        await fetch(`/api/ai/chats/${chatId}`, { method: 'DELETE', headers });
+      } catch (err) {
+        await fetch(`http://localhost:5000/api/ai/chats/${chatId}`, { method: 'DELETE', headers });
+      }
+      setChatsList(prev => prev.filter(c => (c.id !== chatId && c._id !== chatId)));
+      if (currentChatId === chatId) {
+        handleNewChat();
+      }
+      addToast('Conversation deleted', 'info', '🗑️');
+    } catch (e) {}
+  };
 
   // Auto scroll to latest message
   useEffect(() => {
@@ -85,38 +177,15 @@ export const SageAI = () => {
     }
   }, [messages, isTyping, activeTab]);
 
-  // Self-testing Flashcards Decks
-  const initialDecks = {
-    DBMS: [
-      { id: 'db_1', category: 'DBMS 🗄️', question: 'What is 1NF (First Normal Form)?', answer: '1NF requires that each table cell contains a single atomic (indivisible) value, and each record is uniquely identifiable with a primary key.', difficulty: 'Easy', flipped: false, status: null },
-      { id: 'db_2', category: 'DBMS 🗄️', question: 'What is 2NF (Second Normal Form)?', answer: '2NF requires being in 1NF and ensuring that no non-prime attribute depends on a proper subset of any candidate key (Eliminating partial dependencies).', difficulty: 'Medium', flipped: false, status: null },
-      { id: 'db_3', category: 'DBMS 🗄️', question: 'What is 3NF (Third Normal Form)?', answer: '3NF requires being in 2NF and eliminating transitive dependencies (For any dependency X → Y, X must be a superkey or Y must be a prime attribute).', difficulty: 'Medium', flipped: false, status: null },
-      { id: 'db_4', category: 'DBMS 🗄️', question: 'What is BCNF (Boyce-Codd Normal Form)?', answer: 'A stricter variant of 3NF where for EVERY non-trivial functional dependency X → Y, X MUST be a superkey.', difficulty: 'Hard', flipped: false, status: null }
-    ],
-    OS: [
-      { id: 'os_1', category: 'Operating Systems 🖥️', question: 'What are the 4 Coffman Conditions for Deadlock?', answer: '1. Mutual Exclusion 2. Hold and Wait 3. No Preemption 4. Circular Wait. Breaking any 1 condition prevents deadlock.', difficulty: 'Medium', flipped: false, status: null },
-      { id: 'os_2', category: 'Operating Systems 🖥️', question: 'What is the difference between Process and Thread?', answer: 'A Process is an independent program execution with isolated memory. A Thread is a lightweight execution unit sharing process memory space.', difficulty: 'Easy', flipped: false, status: null },
-      { id: 'os_3', category: 'Operating Systems 🖥️', question: 'What is Virtual Memory Paging?', answer: 'Paging divides memory into fixed-size blocks (Pages in virtual, Frames in physical RAM), allowing non-contiguous allocation.', difficulty: 'Medium', flipped: false, status: null }
-    ],
-    CN: [
-      { id: 'cn_1', category: 'Computer Networks 📡', question: 'Explain the TCP 3-Way Handshake.', answer: '1. Client sends SYN ➔ 2. Server responds with SYN-ACK ➔ 3. Client sends ACK to establish reliable connection.', difficulty: 'Easy', flipped: false, status: null },
-      { id: 'cn_2', category: 'Computer Networks 📡', question: 'What is the difference between TCP and UDP?', answer: 'TCP is connection-oriented and reliable. UDP is connectionless, lightweight, and low-latency.', difficulty: 'Easy', flipped: false, status: null }
-    ]
-  };
+  // Flashcards Decks
+  const initialDecks = [
+    { id: 'bda_1', category: 'Big Data Analysis 🗄️', question: 'What is HDFS Architecture?', answer: 'HDFS follows a Master-Slave architecture where NameNode manages metadata and DataNodes store actual data blocks with 3x replication.', difficulty: 'Easy', flipped: false },
+    { id: 'bda_2', category: 'Big Data Analysis 🗄️', question: 'What is the MapReduce execution flow?', answer: 'Input Splitting ➔ Map Phase (Key-Value pairing) ➔ Shuffle & Sort (Group by key) ➔ Reduce Phase (Aggregation) ➔ Output.', difficulty: 'Medium', flipped: false },
+    { id: 'ml_1', category: 'Machine Learning 🤖', question: 'What is the difference between Supervised & Unsupervised Learning?', answer: 'Supervised learning uses labeled target outputs (Regression, Classification). Unsupervised learning discovers patterns in unlabeled data (Clustering, PCA).', difficulty: 'Easy', flipped: false },
+    { id: 'devops_1', category: 'DevOps ⚡', question: 'What is CI/CD Pipeline?', answer: 'Continuous Integration automatically builds and tests code commits. Continuous Deployment automatically deploys verified code to production environments.', difficulty: 'Medium', flipped: false }
+  ];
 
   const [cardsState, setCardsState] = useState(initialDecks);
-  const currentDeck = cardsState[selectedSubject] || cardsState['DBMS'];
-
-  // Quiz State
-  const quizBank = {
-    DBMS: [
-      { id: 1, question: 'In SQL, which clause filters records after aggregation with GROUP BY?', options: ['WHERE', 'HAVING', 'ORDER BY', 'FILTER'], correctAnswer: 1, selectedAnswer: null, explanation: 'HAVING filters aggregate values (e.g. HAVING COUNT(*) > 5).' },
-      { id: 2, question: 'Which normal form strictly eliminates transitive functional dependencies?', options: ['1NF', '2NF', '3NF', '4NF'], correctAnswer: 2, selectedAnswer: null, explanation: '3NF requires that no non-prime attribute is transitively dependent on candidate key.' }
-    ]
-  };
-
-  const [quizzesState, setQuizzesState] = useState(quizBank);
-  const [quizScore, setQuizScore] = useState(null);
 
   // Send Message Logic
   const handleSendMessage = async (textToSend) => {
@@ -143,7 +212,7 @@ export const SageAI = () => {
         res = await fetch('/api/ai/chat', {
           method: 'POST',
           headers,
-          body: JSON.stringify({ message: queryText, history: historyPayload })
+          body: JSON.stringify({ message: queryText, history: historyPayload, chatId: currentChatId })
         });
         if (!res.ok && res.status === 404) {
           throw new Error('Relative API 404');
@@ -152,7 +221,7 @@ export const SageAI = () => {
         res = await fetch('http://localhost:5000/api/ai/chat', {
           method: 'POST',
           headers,
-          body: JSON.stringify({ message: queryText, history: historyPayload })
+          body: JSON.stringify({ message: queryText, history: historyPayload, chatId: currentChatId })
         });
       }
 
@@ -166,13 +235,17 @@ export const SageAI = () => {
           sources: data.sources || [],
           sourceType: data.sourceType || 'Sage AI'
         }]);
+        if (data.chatId) {
+          setCurrentChatId(data.chatId);
+          fetchUserChats();
+        }
       } else {
-        // Non-200 HTTP response fallback
+        const errorData = await res.json().catch(() => ({}));
         setIsTyping(false);
         setMessages(prev => [...prev, {
           id: Date.now() + 1,
           sender: 'Sage',
-          text: generateLocalFallbackReply(queryText),
+          text: errorData.reply || errorData.message || generateLocalFallbackReply(queryText),
           sourceType: 'Sage AI'
         }]);
       }
@@ -195,22 +268,7 @@ export const SageAI = () => {
   };
 
   const toggleFlip = (cardId) => {
-    setCardsState(prev => ({
-      ...prev,
-      [selectedSubject]: prev[selectedSubject].map(c => c.id === cardId ? { ...c, flipped: !c.flipped } : c)
-    }));
-  };
-
-  const clearChat = () => {
-    setMessages([
-      {
-        id: Date.now(),
-        sender: 'Sage',
-        text: "🌿 **Chat reset!** I am ready to answer your questions. What shall we learn next? 🌱",
-        sourceType: 'System'
-      }
-    ]);
-    addToast('Chat cleared 🌿', 'info', '🧹');
+    setCardsState(prev => prev.map(c => c.id === cardId ? { ...c, flipped: !c.flipped } : c));
   };
 
   return (
@@ -230,198 +288,242 @@ export const SageAI = () => {
               Sage 🌿 AI Academic Assistant
             </h1>
             <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium font-poppins mt-0.5">
-              Live College Companion Data • Gemini Web Search Grounding • Practice Decks
+              Live College Companion Data • Persistent Conversation History • Practice Decks
             </p>
           </div>
         </div>
 
         <button
-          onClick={clearChat}
-          className="px-3.5 py-2 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 text-xs font-poppins font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1.5 hover:bg-rose-500/10 hover:text-rose-500 transition-colors"
+          onClick={handleNewChat}
+          className="px-4 py-2.5 rounded-2xl bg-emerald-500 text-white font-poppins font-semibold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/25 hover:bg-emerald-600 transition-all"
         >
-          <Trash2 className="w-3.5 h-3.5" /> Clear Chat
+          <Plus className="w-4 h-4" /> New Chat
         </button>
       </div>
 
       {/* Mode Navigation Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/40 dark:border-slate-800/50 pb-4">
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-          <button
-            onClick={() => setActiveTab('chat')}
-            className={`px-4 py-2 rounded-2xl font-poppins text-xs font-semibold flex items-center gap-2 transition-all ${
-              activeTab === 'chat' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:bg-white/40 dark:hover:bg-slate-800/40'
-            }`}
-          >
-            <MessageSquare className="w-4 h-4" />
-            AI Assistant Chat
-          </button>
+      <div className="flex items-center gap-2 border-b border-slate-200/40 dark:border-slate-800/50 pb-4 overflow-x-auto no-scrollbar">
+        <button
+          onClick={() => setActiveTab('chat')}
+          className={`px-4 py-2 rounded-2xl font-poppins text-xs font-semibold flex items-center gap-2 transition-all ${
+            activeTab === 'chat' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:bg-white/40 dark:hover:bg-slate-800/40'
+          }`}
+        >
+          <MessageSquare className="w-4 h-4" />
+          AI Assistant Chat
+        </button>
 
-          <button
-            onClick={() => setActiveTab('flashcards')}
-            className={`px-4 py-2 rounded-2xl font-poppins text-xs font-semibold flex items-center gap-2 transition-all ${
-              activeTab === 'flashcards' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:bg-white/40 dark:hover:bg-slate-800/40'
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            Flashcards ({currentDeck.length})
-          </button>
+        <button
+          onClick={() => setActiveTab('flashcards')}
+          className={`px-4 py-2 rounded-2xl font-poppins text-xs font-semibold flex items-center gap-2 transition-all ${
+            activeTab === 'flashcards' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:bg-white/40 dark:hover:bg-slate-800/40'
+          }`}
+        >
+          <BookOpen className="w-4 h-4" />
+          Flashcards ({cardsState.length})
+        </button>
 
-          <button
-            onClick={() => setActiveTab('quiz')}
-            className={`px-4 py-2 rounded-2xl font-poppins text-xs font-semibold flex items-center gap-2 transition-all ${
-              activeTab === 'quiz' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:bg-white/40 dark:hover:bg-slate-800/40'
-            }`}
-          >
-            <BrainCircuit className="w-4 h-4" />
-            Take Quiz
-          </button>
-        </div>
-
-        {/* CS Subject Selector */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-poppins">Subject:</span>
-          <select
-            value={selectedSubject}
-            onChange={(e) => setSelectedSubject(e.target.value)}
-            className="px-3 py-1.5 rounded-xl glass-card text-xs font-poppins font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 focus:outline-none"
-          >
-            <option value="DBMS">DBMS 🗄️</option>
-            <option value="OS">Operating Systems 🖥️</option>
-            <option value="CN">Computer Networks 📡</option>
-          </select>
-        </div>
+        <button
+          onClick={() => setActiveTab('quiz')}
+          className={`px-4 py-2 rounded-2xl font-poppins text-xs font-semibold flex items-center gap-2 transition-all ${
+            activeTab === 'quiz' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:bg-white/40 dark:hover:bg-slate-800/40'
+          }`}
+        >
+          <BrainCircuit className="w-4 h-4" />
+          Take Quiz
+        </button>
       </div>
 
-      {/* TAB 1: Real-Time Concept Chatbot */}
+      {/* TAB 1: Chatbot with History Sidebar */}
       {activeTab === 'chat' && (
-        <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 shadow-2xl flex flex-col h-[calc(100dvh-240px)] min-h-[480px] md:h-[580px]">
-          {/* Chat Messages View */}
-          <div className="flex-1 overflow-y-auto space-y-4 pr-2">
-            {messages.map(msg => (
-              <div
-                key={msg.id}
-                className={`flex gap-3 ${msg.sender === 'User' ? 'justify-end' : 'justify-start'}`}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-[calc(100dvh-240px)] min-h-[540px] md:h-[600px]">
+          {/* Chat History Sidebar */}
+          <div className="glass-card rounded-3xl p-4 border border-slate-200/50 dark:border-slate-800/50 flex flex-col md:col-span-1 overflow-hidden">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200/40 dark:border-slate-800/50 mb-3">
+              <span className="text-xs font-poppins font-extrabold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                Chat History
+              </span>
+              <button
+                onClick={handleNewChat}
+                title="Start New Chat"
+                className="p-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 transition-colors"
               >
-                {msg.sender === 'Sage' && (
-                  <div className="w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-base font-bold shrink-0 shadow-md">
+                <Plus className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-2 pr-1 no-scrollbar">
+              {chatsList.length === 0 ? (
+                <div className="text-center py-8 text-[11px] text-slate-400 font-poppins">
+                  No previous conversations yet. Ask Sage anything! 🌿
+                </div>
+              ) : (
+                chatsList.map(chat => {
+                  const chatId = chat.id || chat._id;
+                  const isActive = currentChatId === chatId;
+                  return (
+                    <div
+                      key={chatId}
+                      onClick={() => loadChatHistory(chatId)}
+                      className={`p-3 rounded-2xl cursor-pointer transition-all border group flex items-start justify-between gap-2 ${
+                        isActive
+                          ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-800 dark:text-emerald-200 font-semibold shadow-sm'
+                          : 'bg-white/40 dark:bg-slate-800/40 border-slate-200/30 dark:border-slate-700/30 text-slate-700 dark:text-slate-300 hover:bg-white/70 dark:hover:bg-slate-800/70'
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="text-xs font-poppins truncate font-semibold">
+                          {chat.title || 'Sage Conversation'}
+                        </div>
+                        <div className="text-[10px] text-slate-400 font-poppins mt-0.5">
+                          {formatChatDate(chat.updatedAt || chat.createdAt)}
+                        </div>
+                      </div>
+                      <button
+                        onClick={(e) => deleteChat(e, chatId)}
+                        title="Delete chat"
+                        className="opacity-0 group-hover:opacity-100 p-1 rounded-lg hover:bg-rose-500/10 hover:text-rose-500 text-slate-400 transition-all shrink-0"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+
+          {/* Main Chat View */}
+          <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 shadow-2xl flex flex-col md:col-span-3 h-full">
+            {/* Chat Messages */}
+            <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+              {messages.map(msg => (
+                <div
+                  key={msg.id}
+                  className={`flex gap-3 ${msg.sender === 'User' ? 'justify-end' : 'justify-start'}`}
+                >
+                  {msg.sender === 'Sage' && (
+                    <div className="w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-base font-bold shrink-0 shadow-md">
+                      🌿
+                    </div>
+                  )}
+                  <div
+                    className={`max-w-xl p-4 rounded-3xl text-xs font-poppins leading-relaxed ${
+                      msg.sender === 'User'
+                        ? 'bg-emerald-500 text-white shadow-md rounded-tr-none'
+                        : 'bg-white/70 dark:bg-slate-800/70 text-slate-800 dark:text-slate-100 border border-slate-200/50 dark:border-slate-700/50 rounded-tl-none shadow-sm'
+                    }`}
+                  >
+                    {/* Source Badge */}
+                    {msg.sender === 'Sage' && msg.sourceType && (
+                      <div className="mb-2 flex items-center gap-1.5 text-[9px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                        {msg.sourceType.includes('Academic') || msg.sourceType.includes('College') ? '🌿 Academic Records' : '✨ Sage AI'}
+                      </div>
+                    )}
+
+                    <FormattedMessage content={msg.text} />
+
+                    {/* Web Sources */}
+                    {msg.sources && msg.sources.length > 0 && (
+                      <div className="mt-3 pt-2.5 border-t border-slate-200/40 dark:border-slate-700/50 space-y-1.5">
+                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 flex items-center gap-1 uppercase tracking-wider">
+                          🌐 Web Sources:
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {msg.sources.map((src, idx) => (
+                            <a
+                              key={idx}
+                              href={src.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 hover:underline bg-emerald-500/10 dark:bg-emerald-500/20 px-2.5 py-0.5 rounded-lg border border-emerald-500/20"
+                            >
+                              <span>🔗</span>
+                              <span className="truncate max-w-[200px]">{src.title}</span>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              {/* Typing Indicator */}
+              {isTyping && (
+                <div className="flex gap-3 items-center text-xs text-emerald-600 dark:text-emerald-400 font-poppins py-1">
+                  <div className="w-8 h-8 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-sm font-bold animate-pulse">
                     🌿
                   </div>
-                )}
-                <div
-                  className={`max-w-xl p-4 rounded-3xl text-xs font-poppins leading-relaxed ${
-                    msg.sender === 'User'
-                      ? 'bg-emerald-500 text-white shadow-md rounded-tr-none'
-                      : 'bg-white/70 dark:bg-slate-800/70 text-slate-800 dark:text-slate-100 border border-slate-200/50 dark:border-slate-700/50 rounded-tl-none shadow-sm'
-                  }`}
-                >
-                  {/* Source Type Badge */}
-                  {msg.sender === 'Sage' && msg.sourceType && (
-                    <div className="mb-2 flex items-center gap-1.5 text-[9px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                      {msg.sourceType.includes('Academic') || msg.sourceType.includes('College Companion') ? '🌿 Academic Records' : msg.sourceType.includes('Web') ? '🌐 Live Web Information' : '✨ Sage AI'}
-                    </div>
-                  )}
-
-                  <FormattedMessage content={msg.text} />
-
-                  {/* Web Sources & Citations */}
-                  {msg.sources && msg.sources.length > 0 && (
-                    <div className="mt-3 pt-2.5 border-t border-slate-200/40 dark:border-slate-700/50 space-y-1.5">
-                      <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 flex items-center gap-1 uppercase tracking-wider">
-                        🌐 Web Sources & Citations:
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {msg.sources.map((src, idx) => (
-                          <a
-                            key={idx}
-                            href={src.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 hover:underline bg-emerald-500/10 dark:bg-emerald-500/20 px-2.5 py-0.5 rounded-lg border border-emerald-500/20"
-                          >
-                            <span>🔗</span>
-                            <span className="truncate max-w-[200px]">{src.title}</span>
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">Sage is analyzing academic data & query...</span>
+                    <span className="flex gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping delay-150" />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
-
-            {/* Polished Loading/Thinking Indicator */}
-            {isTyping && (
-              <div className="flex gap-3 items-center text-xs text-emerald-600 dark:text-emerald-400 font-poppins py-1">
-                <div className="w-8 h-8 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-sm font-bold animate-pulse">
-                  🌿
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">Sage is analyzing academic data & query...</span>
-                  <span className="flex gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping delay-150" />
-                  </span>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Quick Concept Prompts Bar */}
-          <div className="my-3 pt-3 border-t border-slate-200/30 dark:border-slate-800/40">
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400 mb-2">
-              <Zap className="w-3.5 h-3.5 text-amber-500" />
-              <span>Quick Academic Prompts (Click to Ask Sage):</span>
+              )}
+              <div ref={messagesEndRef} />
             </div>
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-              {quickConceptPrompts.map((item, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSendMessage(item.query)}
-                  className="px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-[11px] font-semibold whitespace-nowrap transition-all shadow-sm shrink-0"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
 
-          {/* Input Form with Multiline Textarea */}
-          <form onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} className="flex gap-3 items-end">
-            <textarea
-              rows={1}
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask Sage anything (e.g. 'What is my attendance?', 'What is BCNF?')... [Shift+Enter for new line]"
-              className="flex-1 px-4 py-3 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-poppins resize-none max-h-24"
-            />
-            <button
-              type="submit"
-              disabled={!inputMessage.trim() || isTyping}
-              className="px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-poppins font-semibold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/25 transition-all shrink-0"
-            >
-              <Send className="w-4 h-4" />
-              <span className="hidden sm:inline">Ask Sage</span>
-            </button>
-          </form>
+            {/* Quick Academic Prompts */}
+            <div className="my-3 pt-3 border-t border-slate-200/30 dark:border-slate-800/40">
+              <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400 mb-2">
+                <Zap className="w-3.5 h-3.5 text-amber-500" />
+                <span>Quick Academic Prompts (Click to Ask Sage):</span>
+              </div>
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+                {quickConceptPrompts.map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSendMessage(item.query)}
+                    className="px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-[11px] font-semibold whitespace-nowrap transition-all shadow-sm shrink-0"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Input Form */}
+            <form onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} className="flex gap-3 items-end">
+              <textarea
+                rows={1}
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask Sage anything (e.g. 'What is my attendance?', 'What is HDFS in Big Data Analysis?')... [Shift+Enter for new line]"
+                className="flex-1 px-4 py-3 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-poppins resize-none max-h-24"
+              />
+              <button
+                type="submit"
+                disabled={!inputMessage.trim() || isTyping}
+                className="px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-poppins font-semibold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/25 transition-all shrink-0"
+              >
+                <Send className="w-4 h-4" />
+                <span className="hidden sm:inline">Ask Sage</span>
+              </button>
+            </form>
+          </div>
         </div>
       )}
 
       {/* TAB 2: Self-Testing Flashcards */}
       {activeTab === 'flashcards' && (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {currentDeck.map((fc, idx) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            {cardsState.map((fc) => (
               <motion.div
                 key={fc.id}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.01 }}
                 onClick={() => toggleFlip(fc.id)}
                 className="glass-card rounded-3xl p-6 border shadow-xl flex flex-col justify-between cursor-pointer min-h-[220px]"
               >
                 <div className="flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400 font-bold mb-2">
                   <span>{fc.category}</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                  <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                     {fc.difficulty}
                   </span>
                 </div>
@@ -448,24 +550,22 @@ export const SageAI = () => {
       {activeTab === 'quiz' && (
         <div className="glass-card rounded-3xl p-6 border border-teal-500/30 shadow-2xl space-y-6">
           <h3 className="font-poppins font-bold text-base text-slate-800 dark:text-slate-100">
-            Practice Quiz: {selectedSubject}
+            Practice Quiz: Big Data & CS Knowledge
           </h3>
           <div className="space-y-4">
-            {(quizzesState[selectedSubject] || quizzesState['DBMS']).map((q, qIdx) => (
-              <div key={q.id} className="p-4 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 space-y-2 text-xs">
-                <h4 className="font-bold text-slate-800 dark:text-slate-100">{qIdx + 1}. {q.question}</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {q.options.map((opt, optIdx) => (
-                    <button
-                      key={optIdx}
-                      className="p-2.5 rounded-xl bg-white/50 dark:bg-slate-900/50 border border-slate-200 text-left hover:border-emerald-500"
-                    >
-                      {String.fromCharCode(65 + optIdx)}. {opt}
-                    </button>
-                  ))}
-                </div>
+            <div className="p-4 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 space-y-2 text-xs">
+              <h4 className="font-bold text-slate-800 dark:text-slate-100">1. Which component in HDFS is responsible for storing the actual data blocks?</h4>
+              <div className="grid grid-cols-2 gap-2">
+                {['NameNode', 'DataNode', 'JobTracker', 'TaskTracker'].map((opt, optIdx) => (
+                  <button
+                    key={optIdx}
+                    className="p-2.5 rounded-xl bg-white/50 dark:bg-slate-900/50 border border-slate-200 text-left hover:border-emerald-500"
+                  >
+                    {String.fromCharCode(65 + optIdx)}. {opt}
+                  </button>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       )}

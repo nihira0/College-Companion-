@@ -19,16 +19,10 @@ const generateLocalFallbackReply = (queryText) => {
   if (msgLower.includes('timetable') || msgLower.includes('schedule') || msgLower.includes('class')) {
     return `Here is your class schedule for today:\n\n• **09:00 AM - 10:00 AM**: Database Systems (IT601) in Lab 3 (Dr. Anil Vasoya)\n• **10:15 AM - 11:15 AM**: Computer Networks (IT602) in Room 204\n• **11:30 AM - 12:30 PM**: Operating Systems (IT603) in Room 204\n• **02:00 PM - 04:00 PM**: Web Tech Practical Lab in Computer Center 2`;
   }
-  if (msgLower.includes('bcnf') || msgLower.includes('normal form') || msgLower.includes('normalization') || msgLower.includes('1nf') || msgLower.includes('2nf') || msgLower.includes('3nf')) {
-    return `**Normalization (NF) in DBMS** organizes database tables to minimize redundancy and prevent anomalies:\n\n• **1NF**: Requires atomic values per column and unique row keys.\n• **2NF**: Eliminates *partial dependencies* (all non-key columns depend on whole candidate key).\n• **3NF**: Eliminates *transitive dependencies* (no non-key attribute depends on another non-key attribute).\n• **BCNF**: Boyce-Codd Normal Form requires that for EVERY functional dependency *X → Y*, **X MUST be a super key**.`;
+  if (msgLower.includes('fee') || msgLower.includes('balance') || msgLower.includes('due date')) {
+    return `Your net fee balance is **₹20,000** for Semester 6 (Total: ₹1,00,000, Scholarship: ₹20,000, Paid: ₹60,000). Due date: April 15, 2026.`;
   }
-  if (msgLower.includes('deadlock') || msgLower.includes('coffman')) {
-    return `**Deadlocks in Operating Systems** occur when processes are permanently blocked waiting for resources held by each other.\n\n**The 4 Coffman Conditions:**\n1. **Mutual Exclusion**: Non-shareable resource.\n2. **Hold and Wait**: Process holding resource requests more.\n3. **No Preemption**: Resources cannot be forcibly taken.\n4. **Circular Wait**: Closed chain of waiting processes.\n\n*Breaking any single condition prevents deadlock!*`;
-  }
-  if (msgLower.includes('tcp') || msgLower.includes('handshake') || msgLower.includes('osi')) {
-    return `**TCP 3-Way Handshake** establishes a reliable connection:\n\n1. **SYN**: Client sends Synchronize packet.\n2. **SYN-ACK**: Server responds with Synchronize-Acknowledge.\n3. **ACK**: Client sends Acknowledge back. Connection established! 🎉`;
-  }
-  return `🌿 **Sage AI Assistant:** I am ready to help you with your college studies! Ask me about your **attendance**, **assignments**, **marks**, **timetable**, or CS concepts like **DBMS Normalization**, **OS Deadlocks**, or **TCP Handshake**! 🌱`;
+  return `Sage is temporarily unable to reach the AI service. Please try again.`;
 };
 
 export const FloatingSageDrawer = () => {
@@ -99,6 +93,9 @@ export const FloatingSageDrawer = () => {
         text: m.text
       }));
 
+      console.log('[SAGE UI DEBUG] sending message:', queryText);
+      console.log('[SAGE UI DEBUG] endpoint:', '/api/ai/chat');
+
       let res;
       try {
         res = await fetch('/api/ai/chat', {
@@ -110,14 +107,18 @@ export const FloatingSageDrawer = () => {
           throw new Error('Relative API 404');
         }
       } catch (relErr) {
+        console.log('[SAGE UI DEBUG] relative fetch error, trying absolute port 5000:', relErr);
         res = await fetch('http://localhost:5000/api/ai/chat', {
           method: 'POST',
           headers,
           body: JSON.stringify({ message: queryText, history: historyPayload })
         });
       }
+
+      console.log('[SAGE UI DEBUG] response status:', res?.status);
       if (res && res.ok) {
         const data = await res.json();
+        console.log('[SAGE UI DEBUG] response body:', data);
         setIsTyping(false);
         setMessages(prev => [...prev, {
           id: Date.now() + 1,
@@ -127,15 +128,18 @@ export const FloatingSageDrawer = () => {
           sourceType: data.sourceType || 'Sage AI'
         }]);
       } else {
+        const errorData = await res.json().catch(() => ({}));
+        console.log('[SAGE UI DEBUG] non-200 response body:', errorData);
         setIsTyping(false);
         setMessages(prev => [...prev, {
           id: Date.now() + 1,
           sender: 'Sage',
-          text: generateLocalFallbackReply(queryText),
+          text: errorData.reply || errorData.message || generateLocalFallbackReply(queryText),
           sourceType: 'Sage AI'
         }]);
       }
     } catch (err) {
+      console.log('[SAGE UI DEBUG] request error:', err);
       setIsTyping(false);
       setMessages(prev => [...prev, {
         id: Date.now() + 1,

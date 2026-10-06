@@ -9,6 +9,8 @@ const {
   addStudentToRoster,
   removeStudentFromRoster,
   getUserNotifications,
+  markNotificationRead,
+  markAllNotificationsRead,
   saveBatchAttendance,
   saveBatchMarks,
   getAssignments,
@@ -50,6 +52,8 @@ router.post('/fees/queries', requireRole('student', 'admin'), createFeeQuery);
 
 // User In-App Notifications
 router.get('/notifications', getUserNotifications);
+router.patch('/notifications/read-all', markAllNotificationsRead);
+router.patch('/notifications/:id/read', markNotificationRead);
 
 // Faculty / My Classes & Roster Management
 router.get('/my-classes', requireRole('faculty', 'admin'), getMyClasses);

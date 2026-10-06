@@ -11,18 +11,18 @@ export const Assignments = () => {
 
   // State
   const [selectedClass, setSelectedClass] = useState('div_ita_1');
-  const [selectedSubject, setSelectedSubject] = useState('DBMS');
+  const [selectedSubject, setSelectedSubject] = useState('Big Data Analysis');
   const [assignments, setAssignments] = useState([
-    { id: 'ass_1', title: 'DBMS Relational Algebra & SQL', subject: 'Database Management Systems', dueDate: 'Tomorrow, 11:59 PM', priority: 'High', completed: false, details: 'Submit ER diagrams and Query outputs on Google Classroom', divisionId: 'div_ita_1' },
-    { id: 'ass_2', title: 'CN Socket Programming Lab Report', subject: 'Computer Networks', dueDate: 'May 18, 2026', priority: 'Medium', completed: false, details: 'Include packet capture screenshots from Wireshark', divisionId: 'div_itb_1' },
-    { id: 'ass_3', title: 'OS Deadlock Resolution Essay', subject: 'Operating Systems', dueDate: 'May 21, 2026', priority: 'Low', completed: true, details: 'Banker algorithm simulation code attached', divisionId: 'div_ita_1' },
-    { id: 'ass_4', title: 'Software Engineering Agile Sprint', subject: 'Software Engineering', dueDate: 'May 25, 2026', priority: 'High', completed: false, details: 'Prepare Jira user stories and velocity chart', divisionId: 'div_itc_1' }
+    { id: 'ass_1', title: 'Big Data Analysis HDFS & MapReduce Lab', subject: 'Big Data Analysis', dueDate: 'Tomorrow, 11:59 PM', priority: 'High', completed: false, details: 'Submit MapReduce program execution log and output files', divisionId: 'div_ita_1' },
+    { id: 'ass_2', title: 'Machine Learning Neural Networks Assignment', subject: 'Machine Learning', dueDate: 'May 18, 2026', priority: 'Medium', completed: false, details: 'Train multi-layer perceptron on MNIST dataset', divisionId: 'div_itb_1' },
+    { id: 'ass_3', title: 'User Interface Designing Figma Prototype', subject: 'User Interface Designing', dueDate: 'May 21, 2026', priority: 'Low', completed: true, details: 'Submit interactive Figma prototype link for mobile app', divisionId: 'div_ita_1' },
+    { id: 'ass_4', title: 'Product Design Sprint Report', subject: 'Product Design and Development', dueDate: 'May 25, 2026', priority: 'High', completed: false, details: 'Prepare user persona and value proposition canvas', divisionId: 'div_itc_1' }
   ]);
 
   const [filter, setFilter] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
-  const [newSubject, setNewSubject] = useState('Database Management Systems');
+  const [newSubject, setNewSubject] = useState('Big Data Analysis');
   const [newDueDate, setNewDueDate] = useState('May 28, 2026');
   const [newPriority, setNewPriority] = useState('Medium');
   const [newDetails, setNewDetails] = useState('');

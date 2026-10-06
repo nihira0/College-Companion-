@@ -11,15 +11,45 @@ export const Marks = () => {
 
   // Faculty State
   const [selectedClass, setSelectedClass] = useState('div_ita_1');
-  const [selectedSubject, setSelectedSubject] = useState('PCC-IT 601 Database Management Systems');
+  const [assignedClasses, setAssignedClasses] = useState([
+    { divisionId: 'div_ita_1', divisionName: 'IT-A', subjectName: 'Big Data Analysis', subjectCode: 'IT601' },
+    { divisionId: 'div_itb_1', divisionName: 'IT-B', subjectName: 'Machine Learning', subjectCode: 'IT602' },
+    { divisionId: 'div_itc_1', divisionName: 'IT-C', subjectName: 'Product Design and Development', subjectCode: 'IT604' }
+  ]);
+  const [selectedSubject, setSelectedSubject] = useState('Big Data Analysis');
   const [assessmentComponent, setAssessmentComponent] = useState('ISE 1');
   const [maxScore, setMaxScore] = useState(20);
 
-  const classes = [
-    { id: 'div_ita_1', name: 'IT-A (3rd Year)', subject: 'PCC-IT 601 Database Management Systems' },
-    { id: 'div_itb_1', name: 'IT-B (3rd Year)', subject: 'PEC-IT 602 Computer Networks' },
-    { id: 'div_itc_1', name: 'IT-C (3rd Year)', subject: 'PCC-IT 604 Software Engineering' },
-  ];
+  useEffect(() => {
+    if (isFaculty) {
+      const fetchClasses = async () => {
+        try {
+          const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+          const res = await fetch('/api/academic/my-classes', { headers });
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              setAssignedClasses(data);
+              const defaultForDiv = data.find(c => (c.divisionId || c.id) === selectedClass);
+              if (defaultForDiv) setSelectedSubject(defaultForDiv.subjectName);
+            }
+          }
+        } catch (e) {}
+      };
+      fetchClasses();
+    }
+  }, [isFaculty, token]);
+
+  const assignedSubjectsForDiv = assignedClasses.filter(c => (c.divisionId || c.id) === selectedClass);
+
+  useEffect(() => {
+    if (assignedSubjectsForDiv.length > 0) {
+      const exists = assignedSubjectsForDiv.some(s => s.subjectName === selectedSubject);
+      if (!exists) {
+        setSelectedSubject(assignedSubjectsForDiv[0].subjectName);
+      }
+    }
+  }, [selectedClass, assignedClasses]);
 
   // Assessment Component Default Max Score Auto-Setter
   useEffect(() => {
@@ -55,8 +85,6 @@ export const Marks = () => {
 
   useEffect(() => {
     setRosterScores(initialRosters[selectedClass] || []);
-    const currClassObj = classes.find(c => c.id === selectedClass);
-    if (currClassObj) setSelectedSubject(currClassObj.subject);
   }, [selectedClass]);
 
   const handleScoreChange = (id, newScore) => {
@@ -204,9 +232,19 @@ export const Marks = () => {
             <div className="flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-emerald-500 shrink-0" />
               <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Subject:</span>
-              <span className="px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
-                {selectedSubject}
-              </span>
+              <select
+                value={selectedSubject}
+                onChange={(e) => setSelectedSubject(e.target.value)}
+                className="px-3.5 py-2 rounded-xl bg-white/60 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs font-bold text-emerald-600 dark:text-emerald-400 focus:outline-none focus:border-emerald-500"
+              >
+                {assignedSubjectsForDiv.length > 0 ? (
+                  assignedSubjectsForDiv.map((sub, idx) => (
+                    <option key={idx} value={sub.subjectName}>{sub.subjectName}</option>
+                  ))
+                ) : (
+                  <option value="Database Management Systems">Database Management Systems</option>
+                )}
+              </select>
             </div>
 
             <div className="flex items-center gap-2">

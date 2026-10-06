@@ -36,14 +36,14 @@ export const Timetable = () => {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
   const defaultSlots = [
-    { id: 'tt_1', divisionId: 'div_ita_1', divisionName: 'IT-A', day: 'Monday', time: '09:00 AM - 10:30 AM', subject: 'Database Management Systems', code: 'IT601', room: 'Lab 221, B-Wing', professor: 'Dr. Rajesh S. Bansode', type: 'Lecture' },
-    { id: 'tt_2', divisionId: 'div_ita_1', divisionName: 'IT-A', day: 'Monday', time: '11:00 AM - 01:00 PM', subject: 'DBMS Laboratory', code: 'IT601L', room: 'Lab 203', professor: 'Dr. Rajesh S. Bansode', type: 'Practical Lab' },
-    { id: 'tt_3', divisionId: 'div_itb_1', divisionName: 'IT-B', day: 'Monday', time: '02:00 PM - 03:30 PM', subject: 'Computer Networks', code: 'IT602', room: 'Class 518', professor: 'Mr. Vijay Kumar Yele', type: 'Lecture' },
-    { id: 'tt_4', divisionId: 'div_ita_1', divisionName: 'IT-A', day: 'Tuesday', time: '09:00 AM - 10:30 AM', subject: 'Software Engineering', code: 'IT604', room: 'Class 603', professor: 'Dr. Sangeeta Vhatkar', type: 'Lecture' },
-    { id: 'tt_5', divisionId: 'div_itb_1', divisionName: 'IT-B', day: 'Tuesday', time: '11:00 AM - 12:30 PM', subject: 'Artificial Intelligence', code: 'IT605', room: 'Class 530', professor: 'Dr. Aruna Pavate', type: 'Lecture' },
-    { id: 'tt_6', divisionId: 'div_ita_1', divisionName: 'IT-A', day: 'Wednesday', time: '09:30 AM - 11:30 AM', subject: 'Computer Networks Lab', code: 'IT602L', room: 'Lab 221', professor: 'Mr. Vijay Kumar Yele', type: 'Practical Lab' },
-    { id: 'tt_7', divisionId: 'div_ita_1', divisionName: 'IT-A', day: 'Thursday', time: '10:00 AM - 11:30 AM', subject: 'Operating Systems', code: 'IT603', room: 'Class 530', professor: 'Dr. Rahul Neve', type: 'Lecture' },
-    { id: 'tt_8', divisionId: 'div_itc_1', divisionName: 'IT-C', day: 'Friday', time: '09:00 AM - 11:00 AM', subject: 'OS Simulation Lab', code: 'IT603L', room: 'Lab 204', professor: 'Dr. Rahul Neve', type: 'Practical Lab' }
+    { id: 'tt_1', divisionId: 'div_ita_1', divisionName: 'IT-A', day: 'Monday', time: '09:00 AM - 10:30 AM', subject: 'Big Data Analysis', code: 'IT601', room: 'Lab 221, B-Wing', professor: 'Dr. Rajesh S. Bansode', type: 'Lecture' },
+    { id: 'tt_2', divisionId: 'div_ita_1', divisionName: 'IT-A', day: 'Monday', time: '11:00 AM - 01:00 PM', subject: 'Machine Learning Lab', code: 'IT602L', room: 'Lab 203', professor: 'Dr. Neeta P. Patil', type: 'Practical Lab' },
+    { id: 'tt_3', divisionId: 'div_itb_1', divisionName: 'IT-B', day: 'Monday', time: '02:00 PM - 03:30 PM', subject: 'User Interface Designing', code: 'IT603', room: 'Class 518', professor: 'Dr. Sangeeta Vhatkar', type: 'Lecture' },
+    { id: 'tt_4', divisionId: 'div_ita_1', divisionName: 'IT-A', day: 'Tuesday', time: '09:00 AM - 10:30 AM', subject: 'Product Design and Development', code: 'IT604', room: 'Class 603', professor: 'Dr. Aruna Pavate', type: 'Lecture' },
+    { id: 'tt_5', divisionId: 'div_itb_1', divisionName: 'IT-B', day: 'Tuesday', time: '11:00 AM - 12:30 PM', subject: 'DevOps', code: 'IT605', room: 'Class 530', professor: 'Mr. Vijay Kumar Yele', type: 'Lecture' },
+    { id: 'tt_6', divisionId: 'div_ita_1', divisionName: 'IT-A', day: 'Wednesday', time: '09:30 AM - 11:30 AM', subject: 'Cloud Computing Lab', code: 'IT606L', room: 'Lab 221', professor: 'Mrs. Jisha Tinsu', type: 'Practical Lab' },
+    { id: 'tt_7', divisionId: 'div_ita_1', divisionName: 'IT-A', day: 'Thursday', time: '10:00 AM - 11:30 AM', subject: 'Management Information Systems', code: 'IT607', room: 'Class 530', professor: 'Mrs. Minakshi Shashikant Ghorpade', type: 'Lecture' },
+    { id: 'tt_8', divisionId: 'div_itc_1', divisionName: 'IT-C', day: 'Friday', time: '09:00 AM - 11:00 AM', subject: 'Data Science Lab', code: 'IT608L', room: 'Lab 204', professor: 'Ms. Nidhi Bhavsar', type: 'Practical Lab' }
   ];
 
   const fetchTimetable = async () => {

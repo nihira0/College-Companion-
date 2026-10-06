@@ -8,11 +8,14 @@ export const Attendance = () => {
   const { user, token } = useAuth();
   const { addToast } = useNotification();
   const [subjects, setSubjects] = useState([
-    { id: 'att_1', name: 'Database Systems', attended: 26, total: 30, target: 75 },
-    { id: 'att_2', name: 'Computer Networks', attended: 22, total: 30, target: 75 },
-    { id: 'att_3', name: 'Operating Systems', attended: 28, total: 32, target: 75 },
-    { id: 'att_4', name: 'Software Engineering', attended: 18, total: 25, target: 75 },
-    { id: 'att_5', name: 'Web Technologies Lab', attended: 14, total: 14, target: 75 }
+    { id: 'att_1', name: 'Big Data Analysis', attended: 26, total: 30, target: 75 },
+    { id: 'att_2', name: 'Machine Learning', attended: 22, total: 30, target: 75 },
+    { id: 'att_3', name: 'User Interface Designing', attended: 28, total: 32, target: 75 },
+    { id: 'att_4', name: 'Product Design and Development', attended: 18, total: 25, target: 75 },
+    { id: 'att_5', name: 'DevOps', attended: 14, total: 14, target: 75 },
+    { id: 'att_6', name: 'Cloud Computing', attended: 20, total: 22, target: 75 },
+    { id: 'att_7', name: 'Management Information Systems', attended: 25, total: 28, target: 75 },
+    { id: 'att_8', name: 'Data Science', attended: 19, total: 20, target: 75 }
   ]);
 
   const isFacultyOrAdmin = user?.role === 'faculty' || user?.role === 'admin';
@@ -104,9 +107,46 @@ export const Attendance = () => {
 
   // Faculty Register State
   const [selectedDivision, setSelectedDivision] = useState('div_ita_1');
+  const [assignedClasses, setAssignedClasses] = useState([
+    { divisionId: 'div_ita_1', divisionName: 'IT-A', subjectName: 'Database Management Systems', subjectCode: 'IT601' },
+    { divisionId: 'div_itb_1', divisionName: 'IT-B', subjectName: 'Computer Networks', subjectCode: 'IT602' },
+    { divisionId: 'div_itc_1', divisionName: 'IT-C', subjectName: 'Software Engineering', subjectCode: 'IT604' }
+  ]);
+  const [selectedSubject, setSelectedSubject] = useState('Database Management Systems');
   const [attendanceDate, setAttendanceDate] = useState(new Date().toISOString().slice(0, 10));
   const [roster, setRoster] = useState([]);
   const [rosterLoading, setRosterLoading] = useState(false);
+
+  useEffect(() => {
+    if (isFacultyOrAdmin) {
+      const fetchClasses = async () => {
+        try {
+          const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+          const res = await fetch('/api/academic/my-classes', { headers });
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              setAssignedClasses(data);
+              const defaultForDiv = data.find(c => (c.divisionId || c.id) === selectedDivision);
+              if (defaultForDiv) setSelectedSubject(defaultForDiv.subjectName);
+            }
+          }
+        } catch (e) {}
+      };
+      fetchClasses();
+    }
+  }, [isFacultyOrAdmin, token]);
+
+  const assignedSubjectsForDiv = assignedClasses.filter(c => (c.divisionId || c.id) === selectedDivision);
+
+  useEffect(() => {
+    if (assignedSubjectsForDiv.length > 0) {
+      const exists = assignedSubjectsForDiv.some(s => s.subjectName === selectedSubject);
+      if (!exists) {
+        setSelectedSubject(assignedSubjectsForDiv[0].subjectName);
+      }
+    }
+  }, [selectedDivision, assignedClasses]);
 
   useEffect(() => {
     if (isFacultyOrAdmin) {
@@ -148,7 +188,7 @@ export const Attendance = () => {
       };
       const payload = {
         divisionId: selectedDivision,
-        subject: 'Database Management Systems',
+        subject: selectedSubject,
         date: attendanceDate,
         records: roster.map(s => ({ studentId: s.id, status: s.status }))
       };
@@ -162,7 +202,7 @@ export const Attendance = () => {
         addToast(`✅ ${data.message}`, 'success', '📊');
       }
     } catch (err) {
-      addToast(`Attendance saved for ${attendanceDate}!`, 'success', '📊');
+      addToast(`Attendance for ${selectedSubject} saved for ${attendanceDate}!`, 'success', '📊');
     }
   };
 
@@ -187,9 +227,9 @@ export const Attendance = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200/40 pb-4">
             <div>
               <h2 className="font-poppins font-bold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                <span>📋</span> Class Attendance Register (Assigned Division)
+                <span>📋</span> Class Attendance Register (Assigned Division & Subject)
               </h2>
-              <p className="text-xs text-slate-500">Select assigned IT division and date to record official attendance.</p>
+              <p className="text-xs text-slate-500">Select assigned division, subject, and date to record official attendance.</p>
             </div>
 
             <div className="flex flex-wrap items-center gap-3 text-xs font-poppins">
@@ -203,6 +243,23 @@ export const Attendance = () => {
                   <option value="div_ita_1">Division IT-A (3rd Year)</option>
                   <option value="div_itb_1">Division IT-B (3rd Year)</option>
                   <option value="div_itc_1">Division IT-C (3rd Year)</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <label className="font-semibold text-slate-600 dark:text-slate-300">Subject:</label>
+                <select
+                  value={selectedSubject}
+                  onChange={(e) => setSelectedSubject(e.target.value)}
+                  className="px-3 py-1.5 rounded-xl bg-white/60 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 font-bold text-teal-600 dark:text-teal-400 focus:outline-none"
+                >
+                  {assignedSubjectsForDiv.length > 0 ? (
+                    assignedSubjectsForDiv.map((sub, idx) => (
+                      <option key={idx} value={sub.subjectName}>{sub.subjectName}</option>
+                    ))
+                  ) : (
+                    <option value="Database Management Systems">Database Management Systems</option>
+                  )}
                 </select>
               </div>
 

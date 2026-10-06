@@ -28,22 +28,26 @@ let mockDivisions = [
 ];
 
 let mockSubjects = [
-  { id: 'sub_dbms_1', departmentId: 'dept_it_1', name: 'Database Management Systems', code: 'IT601' },
-  { id: 'sub_cn_1', departmentId: 'dept_it_1', name: 'Computer Networks', code: 'IT602' },
-  { id: 'sub_os_1', departmentId: 'dept_it_1', name: 'Operating Systems', code: 'IT603' },
-  { id: 'sub_se_1', departmentId: 'dept_it_1', name: 'Software Engineering', code: 'IT604' }
+  { id: 'sub_bda_1', departmentId: 'dept_it_1', name: 'Big Data Analysis', code: 'IT601' },
+  { id: 'sub_ml_1', departmentId: 'dept_it_1', name: 'Machine Learning', code: 'IT602' },
+  { id: 'sub_uid_1', departmentId: 'dept_it_1', name: 'User Interface Designing', code: 'IT603' },
+  { id: 'sub_pdd_1', departmentId: 'dept_it_1', name: 'Product Design and Development', code: 'IT604' },
+  { id: 'sub_devops_1', departmentId: 'dept_it_1', name: 'DevOps', code: 'IT605' },
+  { id: 'sub_cc_1', departmentId: 'dept_it_1', name: 'Cloud Computing', code: 'IT606' },
+  { id: 'sub_mis_1', departmentId: 'dept_it_1', name: 'Management Information Systems', code: 'IT607' },
+  { id: 'sub_ds_1', departmentId: 'dept_it_1', name: 'Data Science', code: 'IT608' }
 ];
 
 let mockFacultyAssignments = [
-  { id: 'fa_1', facultyId: 'user_fac_1', subjectId: 'sub_dbms_1', divisionId: 'div_ita_1', academicYear: '2025-2026' },
-  { id: 'fa_2', facultyId: 'user_fac_2', subjectId: 'sub_se_1', divisionId: 'div_ita_1', academicYear: '2025-2026' },
-  { id: 'fa_3', facultyId: 'user_fac_3', subjectId: 'sub_se_1', divisionId: 'div_itb_1', academicYear: '2025-2026' },
-  { id: 'fa_4', facultyId: 'user_faculty_1', subjectId: 'sub_dbms_1', divisionId: 'div_ita_1', academicYear: '2025-2026' },
-  { id: 'fa_5', facultyId: 'user_fac_6', subjectId: 'sub_os_1', divisionId: 'div_itc_1', academicYear: '2025-2026' },
-  { id: 'fa_6', facultyId: 'user_fac_11', subjectId: 'sub_cn_1', divisionId: 'div_itb_1', academicYear: '2025-2026' },
-  { id: 'fa_7', facultyId: 'user_fac_17', subjectId: 'sub_dbms_1', divisionId: 'div_itc_1', academicYear: '2025-2026' },
-  { id: 'fa_8', facultyId: 'user_fac_23', subjectId: 'sub_cn_1', divisionId: 'div_ita_1', academicYear: '2025-2026' },
-  { id: 'fa_9', facultyId: 'user_fac_25', subjectId: 'sub_os_1', divisionId: 'div_itb_1', academicYear: '2025-2026' }
+  { id: 'fa_1', facultyId: 'user_fac_1', subjectId: 'sub_bda_1', divisionId: 'div_ita_1', academicYear: '2025-2026' },
+  { id: 'fa_2', facultyId: 'user_fac_2', subjectId: 'sub_ml_1', divisionId: 'div_ita_1', academicYear: '2025-2026' },
+  { id: 'fa_3', facultyId: 'user_fac_3', subjectId: 'sub_uid_1', divisionId: 'div_itb_1', academicYear: '2025-2026' },
+  { id: 'fa_4', facultyId: 'user_faculty_1', subjectId: 'sub_bda_1', divisionId: 'div_ita_1', academicYear: '2025-2026' },
+  { id: 'fa_5', facultyId: 'user_fac_6', subjectId: 'sub_pdd_1', divisionId: 'div_itc_1', academicYear: '2025-2026' },
+  { id: 'fa_6', facultyId: 'user_fac_11', subjectId: 'sub_devops_1', divisionId: 'div_itb_1', academicYear: '2025-2026' },
+  { id: 'fa_7', facultyId: 'user_fac_17', subjectId: 'sub_mis_1', divisionId: 'div_itc_1', academicYear: '2025-2026' },
+  { id: 'fa_8', facultyId: 'user_fac_23', subjectId: 'sub_cc_1', divisionId: 'div_ita_1', academicYear: '2025-2026' },
+  { id: 'fa_9', facultyId: 'user_fac_25', subjectId: 'sub_ds_1', divisionId: 'div_itb_1', academicYear: '2025-2026' }
 ];
 
 let mockAdmissions = [
@@ -487,6 +491,26 @@ const createFeeStructure = async (req, res) => {
   res.status(201).json(newFs);
 };
 
+const logAuditEvent = ({ action, performedBy, performedByName, target, details }) => {
+  const newLog = {
+    id: `log_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+    action: action || 'SYSTEM_ACTION',
+    performedBy: performedBy || 'system',
+    performedByName: performedByName || 'System User',
+    target: target || 'System',
+    details: details || '',
+    timestamp: new Date().toISOString()
+  };
+  mockAuditLogs.unshift(newLog);
+  if (isDbReady()) {
+    try {
+      const item = new AuditLog(newLog);
+      item.save().catch(() => {});
+    } catch (e) {}
+  }
+  return newLog;
+};
+
 const recordPayment = async (req, res) => {
   const { userId, amount, paymentMode, remarks } = req.body;
   if (!userId || !amount) {
@@ -508,6 +532,27 @@ const recordPayment = async (req, res) => {
     remarks: remarks || 'Manual Payment Recorded by Admin'
   };
 
+  const { recordStudentFeePaymentInternal, createInAppNotification } = require('./academicController');
+  recordStudentFeePaymentInternal(userId, amount, receiptNo);
+
+  // Send Fee Update notification to student (no sensitive fee amount in text)
+  try {
+    createInAppNotification({
+      userId: userId,
+      role: 'student',
+      title: 'Fee Information Updated',
+      message: 'Your fee information has been updated.',
+      details: `Receipt #${receiptNo} generated for your account.`,
+      category: 'Admin',
+      type: 'success',
+      priority: 'MEDIUM',
+      performedBy: req.user?.id || 'admin',
+      performedByName: req.user?.name || 'College Admin',
+      actionUrl: '/fees',
+      relatedEntity: 'Fee Account'
+    });
+  } catch (e) {}
+
   if (isDbReady()) {
     try {
       const dbTxn = new FeeTransaction(newTxn);
@@ -515,14 +560,12 @@ const recordPayment = async (req, res) => {
     } catch (e) {}
   }
 
-  mockAuditLogs.unshift({
-    id: `log_${Date.now()}`,
+  logAuditEvent({
     action: 'RECORD_PAYMENT',
     performedBy: req.user?.id || 'admin',
     performedByName: req.user?.name || 'College Admin',
     target: userId,
-    details: `Recorded payment of ₹${Number(amount).toLocaleString()} (${txnRef})`,
-    timestamp: new Date().toISOString()
+    details: `Recorded payment of ₹${Number(amount).toLocaleString()} (${txnRef})`
   });
 
   res.json({
@@ -652,11 +695,32 @@ const createFacultyAssignment = async (req, res) => {
     if (isDbReady()) {
       const item = new FacultyAssignment(newAssign);
       await item.save();
-      return res.status(201).json(item);
     }
   } catch (e) {}
 
   mockFacultyAssignments.push(newAssign);
+
+  // Trigger Faculty Notification
+  try {
+    const { createInAppNotification } = require('./academicController');
+    const subObj = mockSubjects.find(s => (s.id || s._id) === subjectId) || { name: 'Database Management Systems', code: 'IT601' };
+    const divObj = mockDivisions.find(d => (d.id || d._id) === divisionId) || { name: 'IT-A' };
+
+    await createInAppNotification({
+      userId: facultyId,
+      role: 'faculty',
+      category: 'Admin',
+      priority: 'HIGH',
+      title: 'Teaching Assignment Updated',
+      message: `You have been assigned to teach ${subObj.name} (${subObj.code}) for ${divObj.name}.`,
+      details: `Academic Year: ${newAssign.academicYear}`,
+      performedBy: req.user?.id || 'admin',
+      performedByName: req.user?.name || 'College Admin',
+      actionUrl: '/classes',
+      relatedEntity: subObj.name
+    });
+  } catch (err) {}
+
   res.status(201).json(newAssign);
 };
 
@@ -719,6 +783,37 @@ const broadcastAnnouncement = async (req, res) => {
     return res.status(400).json({ message: 'Title and content are required' });
   }
 
+  const target = targetRole ? targetRole.toLowerCase() : 'all';
+  const { createInAppNotification } = require('./academicController');
+
+  if (target === 'faculty' || target === 'all') {
+    await createInAppNotification({
+      role: 'faculty',
+      category: 'Admin',
+      priority: urgent ? 'HIGH' : 'MEDIUM',
+      title: `Administrative Notice: ${title}`,
+      message: content,
+      details: 'Published by College Administration',
+      performedBy: req.user?.id || 'admin',
+      performedByName: req.user?.name || 'College Admin',
+      actionUrl: '/notices'
+    });
+  }
+
+  if (target === 'student' || target === 'all') {
+    await createInAppNotification({
+      role: 'student',
+      category: 'Admin',
+      priority: urgent ? 'HIGH' : 'MEDIUM',
+      title: `Notice: ${title}`,
+      message: content,
+      details: 'Published by College Administration',
+      performedBy: req.user?.id || 'admin',
+      performedByName: req.user?.name || 'College Admin',
+      actionUrl: '/notices'
+    });
+  }
+
   mockAuditLogs.unshift({
     id: `log_${Date.now()}`,
     action: 'BROADCAST_ANNOUNCEMENT',
@@ -760,6 +855,7 @@ module.exports = {
   batchImportStudents,
   getAuditLogs,
   broadcastAnnouncement,
+  logAuditEvent,
   mockFacultyAssignments,
   mockSubjects,
   mockDivisions

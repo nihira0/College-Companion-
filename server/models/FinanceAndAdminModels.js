@@ -75,14 +75,19 @@ const AuditLogSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const UserNotificationSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
+  userId: { type: String, default: 'all' },
+  role: { type: String, enum: ['student', 'faculty', 'admin', 'all'], default: 'all' },
   title: { type: String, required: true },
   message: { type: String, required: true },
   details: { type: String, default: '' },
   type: { type: String, default: 'info' },
-  performedBy: { type: String, required: true },
-  performedByName: { type: String, required: true },
-  isRead: { type: Boolean, default: false }
+  category: { type: String, default: 'Admin' }, // 'Admin', 'Academic', 'Students', 'Events'
+  priority: { type: String, enum: ['HIGH', 'MEDIUM', 'LOW'], default: 'MEDIUM' },
+  performedBy: { type: String, default: 'admin' },
+  performedByName: { type: String, default: 'System' },
+  isRead: { type: Boolean, default: false },
+  actionUrl: { type: String, default: '' },
+  relatedEntity: { type: String, default: '' }
 }, { timestamps: true });
 
 module.exports = {
