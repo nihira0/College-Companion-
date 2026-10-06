@@ -35,7 +35,15 @@ app.get('*', (req, res) => {
   if (req.path.startsWith('/api')) {
     return res.status(404).json({ message: 'API route not found' });
   }
-  res.sendFile(path.join(clientDistPath, 'index.html'));
+  const indexPath = path.join(clientDistPath, 'index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error('⚠️ Error sending index.html:', err.message);
+      if (!res.headersSent) {
+        res.status(500).send('College Companion interface loading error. Please check server logs.');
+      }
+    }
+  });
 });
 
 app.listen(PORT, () => {
