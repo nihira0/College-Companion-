@@ -54,14 +54,14 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
+    <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative z-10">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md glass-card rounded-3xl p-6 sm:p-8 border border-white/40 shadow-2xl space-y-5"
+        className="w-full max-w-md glass-card rounded-3xl p-5 sm:p-8 border border-white/40 shadow-2xl space-y-4 sm:space-y-5"
       >
         <div className="text-center space-y-1.5">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-300 mx-auto flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/30">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-300 mx-auto flex items-center justify-center text-xl sm:text-2xl shadow-lg shadow-emerald-500/30">
             🌿
           </div>
           <h1 className="font-poppins font-extrabold text-xl sm:text-2xl text-slate-800 dark:text-slate-100">
@@ -77,7 +77,7 @@ export const Login = () => {
           <label className="block text-xs text-center font-bold text-slate-700 dark:text-slate-200 font-poppins">
             Who are you logging in as?
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
             {[
               { id: 'student', label: 'Student', icon: '🎓' },
               { id: 'faculty', label: 'Faculty', icon: '👨‍🏫' },
@@ -87,13 +87,13 @@ export const Login = () => {
                 key={role.id}
                 type="button"
                 onClick={() => handleRoleSelect(role.id)}
-                className={`p-2.5 rounded-2xl font-poppins text-xs font-semibold flex flex-col items-center justify-center gap-1 transition-all border ${
+                className={`p-2 sm:p-2.5 rounded-2xl font-poppins text-xs font-semibold flex flex-col items-center justify-center gap-1 transition-all border ${
                   selectedRole === role.id
                     ? 'bg-gradient-to-tr from-emerald-500 to-teal-500 text-white border-emerald-400 shadow-md scale-[1.02]'
                     : 'bg-white/40 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 border-slate-200/60 dark:border-slate-700/60 hover:bg-emerald-500/10'
                 }`}
               >
-                <span className="text-lg">{role.icon}</span>
+                <span className="text-base sm:text-lg">{role.icon}</span>
                 <span>{role.label}</span>
               </button>
             ))}

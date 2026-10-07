@@ -410,11 +410,11 @@ export const Marks = () => {
   const totalCredits = subjectSchemeGrades.reduce((sum, item) => sum + item.credits, 0);
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 sm:space-y-8 pb-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-poppins font-extrabold text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-3">
+          <h1 className="font-poppins font-extrabold text-xl sm:text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-3">
             <span className="p-2 rounded-2xl bg-purple-500/10 text-purple-500">🎓</span>
             Academic Scheme & Evaluation Matrix
           </h1>
@@ -425,56 +425,56 @@ export const Marks = () => {
       </div>
 
       {/* Scheme Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-        <div className="glass-card rounded-3xl p-5 border border-purple-500/30 flex items-center gap-4 shadow-lg">
-          <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl font-black shrink-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+        <div className="glass-card rounded-3xl p-3.5 sm:p-5 border border-purple-500/30 flex items-center gap-3 sm:gap-4 shadow-lg">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center text-lg sm:text-xl font-black shrink-0">
             8.24
           </div>
           <div className="min-w-0 flex-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block truncate">Cumulative CGPA</span>
-            <h3 className="font-poppins font-black text-xl text-slate-800 dark:text-slate-100 truncate">8.24 / 10.0</h3>
+            <h3 className="font-poppins font-black text-lg sm:text-xl text-slate-800 dark:text-slate-100 truncate">8.24 / 10.0</h3>
             <p className="text-[11px] text-emerald-500 font-semibold flex items-center gap-1 mt-0.5 truncate">
               <TrendingUp className="w-3 h-3 shrink-0" /> Top 10% Batch
             </p>
           </div>
         </div>
 
-        <div className="glass-card rounded-3xl p-5 border border-emerald-500/30 flex items-center gap-4 shadow-lg">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl font-black shrink-0">
+        <div className="glass-card rounded-3xl p-3.5 sm:p-5 border border-emerald-500/30 flex items-center gap-3 sm:gap-4 shadow-lg">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg sm:text-xl font-black shrink-0">
             {totalCredits}
           </div>
           <div className="min-w-0 flex-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block truncate">Sem 6 Scheme Credits</span>
-            <h3 className="font-poppins font-black text-xl text-slate-800 dark:text-slate-100 truncate">{totalCredits} Credits</h3>
+            <h3 className="font-poppins font-black text-lg sm:text-xl text-slate-800 dark:text-slate-100 truncate">{totalCredits} Credits</h3>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">Total 174 Degree Credits</p>
           </div>
         </div>
 
-        <div className="glass-card rounded-3xl p-5 border border-indigo-500/30 flex items-center gap-4 shadow-lg">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-black shrink-0">
+        <div className="glass-card rounded-3xl p-3.5 sm:p-5 border border-indigo-500/30 flex items-center gap-3 sm:gap-4 shadow-lg">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg sm:text-xl font-black shrink-0">
             87%
           </div>
           <div className="min-w-0 flex-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block truncate">Internal Assessment (IA)</span>
-            <h3 className="font-poppins font-black text-xl text-indigo-600 dark:text-indigo-400 truncate">34.8 / 40 Avg</h3>
+            <h3 className="font-poppins font-black text-lg sm:text-xl text-indigo-600 dark:text-indigo-400 truncate">34.8 / 40 Avg</h3>
             <p className="text-[11px] text-indigo-500 font-semibold mt-0.5 truncate">ISE 1 & ISE 2 Combined</p>
           </div>
         </div>
 
-        <div className="glass-card rounded-3xl p-5 border border-amber-500/30 flex items-center gap-4 shadow-lg">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl font-black shrink-0">
+        <div className="glass-card rounded-3xl p-3.5 sm:p-5 border border-amber-500/30 flex items-center gap-3 sm:gap-4 shadow-lg">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg sm:text-xl font-black shrink-0">
             {Math.round((totalEarned / totalMaxPossible) * 100)}%
           </div>
           <div className="min-w-0 flex-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block truncate">Grand Total Score</span>
-            <h3 className="font-poppins font-black text-xl text-slate-800 dark:text-slate-100 truncate">{totalEarned} / {totalMaxPossible}</h3>
+            <h3 className="font-poppins font-black text-lg sm:text-xl text-slate-800 dark:text-slate-100 truncate">{totalEarned} / {totalMaxPossible}</h3>
             <p className="text-[11px] text-amber-600 dark:text-amber-400 font-semibold mt-0.5 truncate">Continuous Evaluation</p>
           </div>
         </div>
       </div>
 
       {/* Autonomous College Academic Scheme Matrix Table */}
-      <div className="glass-card rounded-3xl p-6 border border-white/40 dark:border-slate-800/60 shadow-xl space-y-4">
+      <div className="glass-card rounded-3xl p-4 sm:p-6 border border-white/40 dark:border-slate-800/60 shadow-xl space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200/40 dark:border-slate-800/50 pb-3 gap-2">
           <div>
             <h2 className="font-poppins font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">

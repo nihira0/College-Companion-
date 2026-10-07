@@ -133,11 +133,11 @@ export const Notices = () => {
     : notices.filter(n => n.category === selectedCategory);
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 sm:space-y-8 pb-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-poppins font-extrabold text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-3">
+          <h1 className="font-poppins font-extrabold text-xl sm:text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-3">
             <span className="p-2 rounded-2xl bg-amber-500/10 text-amber-500">📢</span>
             Department Notices & Announcements
           </h1>
@@ -160,12 +160,12 @@ export const Notices = () => {
       </div>
 
       {/* Category Pills */}
-      <div className="flex items-center gap-2 border-b border-slate-200/40 dark:border-slate-800/50 pb-3 overflow-x-auto">
+      <div className="flex items-center gap-1.5 sm:gap-2 border-b border-slate-200/40 dark:border-slate-800/50 pb-3 overflow-x-auto no-scrollbar">
         {['All', 'Exams', 'Events', 'Academics', 'General'].map(cat => (
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={`px-4 py-1.5 rounded-xl font-poppins text-xs font-semibold transition-all shrink-0 ${
+            className={`px-3 py-1.5 sm:px-4 sm:py-1.5 rounded-xl font-poppins text-[11px] sm:text-xs font-semibold transition-all shrink-0 ${
               selectedCategory === cat
                 ? 'bg-amber-500 text-white shadow-md'
                 : 'text-slate-600 dark:text-slate-400 hover:bg-white/40 dark:hover:bg-slate-800/40'
@@ -177,16 +177,16 @@ export const Notices = () => {
       </div>
 
       {/* Notice Cards */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {filteredNotices.map(notice => (
           <motion.div
             key={notice.id || notice._id}
             whileHover={{ y: -2 }}
-            className={`glass-card rounded-3xl p-6 border shadow-lg transition-all ${
+            className={`glass-card rounded-3xl p-4 sm:p-6 border shadow-lg transition-all ${
               notice.urgent ? 'border-rose-500/40 bg-rose-500/5' : 'border-white/40 dark:border-slate-800/60'
             }`}
           >
-            <div className="flex items-start justify-between gap-4 mb-3">
+            <div className="flex items-start justify-between gap-3 sm:gap-4 mb-3">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-1.5">
                   {notice.urgent && (
@@ -201,7 +201,7 @@ export const Notices = () => {
                     <Users className="w-3 h-3" /> {notice.targetLabel || 'All Classes'}
                   </span>
                 </div>
-                <h3 className="font-poppins font-bold text-base text-slate-800 dark:text-slate-100">
+                <h3 className="font-poppins font-bold text-sm sm:text-base text-slate-800 dark:text-slate-100">
                   {notice.title}
                 </h3>
               </div>

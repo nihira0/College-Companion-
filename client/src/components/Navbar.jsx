@@ -127,7 +127,7 @@ export const Navbar = ({ onOpenOmnibar, onToggleMobileSidebar, isMobileSidebarOp
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-0 mt-3 w-80 sm:w-96 glass-card rounded-3xl p-4 shadow-2xl z-50 border border-slate-200/50 dark:border-slate-700/50 space-y-3"
+                className="absolute right-0 mt-3 w-[calc(100vw-2rem)] max-w-sm sm:w-96 glass-card rounded-3xl p-4 shadow-2xl z-50 border border-slate-200/50 dark:border-slate-700/50 space-y-3"
               >
                 {/* Header */}
                 <div className="flex items-center justify-between pb-2 border-b border-slate-200/40 dark:border-slate-800/50">

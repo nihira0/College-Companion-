@@ -77,7 +77,7 @@ const Layout = ({ children }) => {
       <FloatingSageDrawer />
 
       {/* Main Content View Container */}
-      <main className="px-4 md:pl-72 md:pr-5 pt-24 md:pt-28 pb-10 min-h-screen relative z-10">
+      <main className="px-3 sm:px-4 md:pl-72 md:pr-5 pt-20 sm:pt-24 md:pt-28 pb-6 md:pb-10 min-h-screen relative z-10">
         <div className="max-w-7xl mx-auto">
           {children}
         </div>

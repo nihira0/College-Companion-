@@ -205,7 +205,7 @@ export const Timetable = () => {
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 sm:space-y-8 pb-12">
       {/* Alert Banner */}
       <AnimatePresence>
         {alertMsg && (
@@ -232,7 +232,7 @@ export const Timetable = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-poppins font-extrabold text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-3">
+          <h1 className="font-poppins font-extrabold text-xl sm:text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-3">
             <span className="p-2 rounded-2xl bg-teal-500/10 text-teal-500">📅</span>
             {isFaculty ? 'Faculty Teaching Schedule' : 'Academic Schedule & Timetable'}
           </h1>
@@ -277,12 +277,12 @@ export const Timetable = () => {
 
       {/* Day selector tabs */}
       <div className="flex items-center justify-between border-b border-slate-200/40 dark:border-slate-800/50 pb-2">
-        <div className="flex items-center gap-2 overflow-x-auto">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar">
           {days.map(day => (
             <button
               key={day}
               onClick={() => setSelectedDay(day)}
-              className={`px-5 py-2 rounded-2xl font-poppins text-xs font-semibold transition-all shrink-0 ${
+              className={`px-3 py-1.5 sm:px-5 sm:py-2 rounded-2xl font-poppins text-[11px] sm:text-xs font-semibold transition-all shrink-0 ${
                 selectedDay === day
                   ? 'bg-teal-600 text-white shadow-lg shadow-teal-500/25'
                   : 'text-slate-600 dark:text-slate-400 hover:bg-white/40 dark:hover:bg-slate-800/40'
@@ -303,9 +303,9 @@ export const Timetable = () => {
       </div>
 
       {/* Timeline Schedule Cards */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {getFilteredSlots().length === 0 ? (
-          <div className="glass-card rounded-3xl p-12 text-center text-slate-400 font-poppins space-y-2">
+          <div className="glass-card rounded-3xl p-8 sm:p-12 text-center text-slate-400 font-poppins space-y-2">
             <CalendarIcon className="w-10 h-10 mx-auto text-slate-300 dark:text-slate-600" />
             <p className="font-semibold text-sm">No teaching sessions scheduled for {selectedDay}.</p>
             <p className="text-xs">
@@ -319,7 +319,7 @@ export const Timetable = () => {
               initial={{ opacity: 0, x: -15 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: idx * 0.05 }}
-              className="glass-card rounded-3xl p-5 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4"
+              className="glass-card rounded-3xl p-4 sm:p-5 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4"
             >
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                 <div className="p-2.5 sm:p-3 rounded-2xl bg-teal-500/10 text-teal-600 dark:text-teal-400 font-poppins font-bold text-xs shrink-0 flex items-center gap-1.5 self-start">

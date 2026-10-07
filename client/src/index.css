@@ -66,3 +66,29 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(34, 197, 94, 0.6);
 }
+
+/* Mobile Responsiveness & Compact Scaling (< 768px) */
+@media (max-width: 767px) {
+  /* Prevent horizontal page scrolling */
+  body, #root {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Compact glass card border radius on mobile */
+  .glass-card {
+    border-radius: 1.25rem;
+  }
+
+  /* Smooth momentum scrolling for mobile tables and filter strips */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Mobile dialog & modal backdrop height safety */
+  .fixed.inset-0 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+

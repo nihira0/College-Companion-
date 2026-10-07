@@ -129,9 +129,9 @@ export const Assignments = () => {
   return (
     <div className="space-y-6 pb-12">
       {/* Header */}
-      <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="glass-card rounded-3xl p-4 sm:p-6 border border-emerald-500/30 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-poppins font-extrabold text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-3">
+          <h1 className="font-poppins font-extrabold text-xl sm:text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-3">
             <span className="p-2 rounded-2xl bg-emerald-500/10 text-emerald-500">📝</span>
             {isFacultyOrAdmin ? 'Faculty Assignment Publisher & Analytics' : 'My Academic Assignments'}
           </h1>
@@ -223,7 +223,7 @@ export const Assignments = () => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className={`glass-card rounded-3xl p-5 border transition-all ${
+                className={`glass-card rounded-3xl p-4 sm:p-5 border transition-all ${
                   item.completed && !isFacultyOrAdmin
                     ? 'border-emerald-500/30 bg-emerald-500/5 opacity-85'
                     : 'border-white/40 dark:border-slate-800/60 shadow-lg'

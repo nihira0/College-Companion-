@@ -274,17 +274,17 @@ export const SageAI = () => {
   return (
     <div className="space-y-6 pb-12">
       {/* Header */}
-      <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
+      <div className="glass-card rounded-3xl p-4 sm:p-6 border border-emerald-500/30 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6">
+        <div className="flex items-center gap-3 sm:gap-4">
           <motion.div
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-300 flex items-center justify-center text-4xl shadow-lg shadow-emerald-500/30 border border-emerald-300/40 shrink-0"
+            className="w-12 h-12 sm:w-16 sm:h-16 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-300 flex items-center justify-center text-3xl sm:text-4xl shadow-lg shadow-emerald-500/30 border border-emerald-300/40 shrink-0"
           >
             🌿
           </motion.div>
           <div>
-            <h1 className="font-poppins font-extrabold text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <h1 className="font-poppins font-extrabold text-lg sm:text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-2">
               Sage 🌿 AI Academic Assistant
             </h1>
             <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium font-poppins mt-0.5">
@@ -295,7 +295,7 @@ export const SageAI = () => {
 
         <button
           onClick={handleNewChat}
-          className="px-4 py-2.5 rounded-2xl bg-emerald-500 text-white font-poppins font-semibold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/25 hover:bg-emerald-600 transition-all"
+          className="px-4 py-2.5 rounded-2xl bg-emerald-500 text-white font-poppins font-semibold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/25 hover:bg-emerald-600 transition-all self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" /> New Chat
         </button>
@@ -336,9 +336,9 @@ export const SageAI = () => {
 
       {/* TAB 1: Chatbot with History Sidebar */}
       {activeTab === 'chat' && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-[calc(100dvh-240px)] min-h-[540px] md:h-[600px]">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6 h-[calc(100dvh-200px)] min-h-[460px] md:h-[600px]">
           {/* Chat History Sidebar */}
-          <div className="glass-card rounded-3xl p-4 border border-slate-200/50 dark:border-slate-800/50 flex flex-col md:col-span-1 overflow-hidden">
+          <div className="glass-card rounded-3xl p-4 border border-slate-200/50 dark:border-slate-800/50 flex flex-col md:col-span-1 overflow-hidden max-h-48 md:max-h-none">
             <div className="flex items-center justify-between pb-3 border-b border-slate-200/40 dark:border-slate-800/50 mb-3">
               <span className="text-xs font-poppins font-extrabold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-emerald-500" />
@@ -395,7 +395,7 @@ export const SageAI = () => {
           </div>
 
           {/* Main Chat View */}
-          <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 shadow-2xl flex flex-col md:col-span-3 h-full">
+          <div className="glass-card rounded-3xl p-4 sm:p-6 border border-emerald-500/30 shadow-2xl flex flex-col md:col-span-3 h-full">
             {/* Chat Messages */}
             <div className="flex-1 overflow-y-auto space-y-4 pr-2">
               {messages.map(msg => (

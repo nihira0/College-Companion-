@@ -118,29 +118,29 @@ export const Dashboard = () => {
   // Render Faculty Dashboard
   if (userRole === 'faculty') {
     return (
-      <div className="space-y-8 pb-10">
+      <div className="space-y-6 sm:space-y-8 pb-10">
         {/* Dynamic Context Greeting Header */}
         <motion.div
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col md:flex-row md:items-center justify-between gap-4"
+          className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4"
         >
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-poppins font-extrabold text-2xl md:text-3xl tracking-tight text-slate-800 dark:text-slate-100 flex items-center gap-3">
+              <h1 className="font-poppins font-extrabold text-xl sm:text-2xl md:text-3xl tracking-tight text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-3">
                 <span>👨‍🏫</span> {greeting.salutation}, Professor {user?.name || 'Faculty'}!
               </h1>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-teal-500/20 text-teal-700 dark:text-teal-300 border border-teal-500/30">
                 {userRole}
               </span>
             </div>
-            <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mt-1 font-poppins">
+            <p className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 mt-1 font-poppins">
               Faculty Academic Workstation • Manage Assigned Class Rosters, Attendance Registers & Marks
             </p>
           </div>
 
-          <div className="px-4 py-2 rounded-2xl glass-card text-xs font-semibold text-emerald-800 dark:text-emerald-300 flex items-center gap-2 border border-emerald-500/20 shadow-sm self-start md:self-auto">
+          <div className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-2xl glass-card text-xs font-semibold text-emerald-800 dark:text-emerald-300 flex items-center gap-2 border border-emerald-500/20 shadow-sm self-start md:self-auto">
             <CalendarIcon className="w-4 h-4 text-emerald-500" />
             <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
           </div>
@@ -474,44 +474,44 @@ export const Dashboard = () => {
   const pendingAssList = studentAssignments.filter(a => !a.completed);
 
   return (
-    <div className="space-y-8 pb-10">
+    <div className="space-y-6 sm:space-y-8 pb-10">
       {/* Dynamic Context Greeting Header */}
       <motion.div
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col md:flex-row md:items-center justify-between gap-4"
+        className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4"
       >
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="font-poppins font-extrabold text-2xl md:text-3xl tracking-tight text-slate-800 dark:text-slate-100 flex items-center gap-3">
+            <h1 className="font-poppins font-extrabold text-xl sm:text-2xl md:text-3xl tracking-tight text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-3">
               <span>{greeting.icon}</span> {greeting.salutation}, {user?.name || 'User'}!
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
               {user?.role || 'student'} {user?.divisionId ? `• ${user.divisionId === 'div_itb_1' ? 'IT-B' : user.divisionId === 'div_itc_1' ? 'IT-C' : 'IT-A'}` : ''}
             </span>
           </div>
-          <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mt-1 font-poppins">
+          <p className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 mt-1 font-poppins">
             {greeting.message}
           </p>
         </div>
 
         {/* Quick Date pill */}
-        <div className="px-4 py-2 rounded-2xl glass-card text-xs font-semibold text-emerald-800 dark:text-emerald-300 flex items-center gap-2 border border-emerald-500/20 shadow-sm self-start md:self-auto">
+        <div className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-2xl glass-card text-xs font-semibold text-emerald-800 dark:text-emerald-300 flex items-center gap-2 border border-emerald-500/20 shadow-sm self-start md:self-auto">
           <CalendarIcon className="w-4 h-4 text-emerald-500" />
           <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
         </div>
       </motion.div>
 
       {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Card 1: Upcoming Deadlines */}
         <motion.div
           whileHover={{ y: -4 }}
-          className="glass-card rounded-3xl p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
+          className="glass-card rounded-3xl p-4 sm:p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
         >
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-xl bg-rose-500/10 text-rose-500">
                   <Clock className="w-4 h-4" />
@@ -555,7 +555,7 @@ export const Dashboard = () => {
         {/* Card 2: Attendance Overview */}
         <motion.div
           whileHover={{ y: -4 }}
-          className="glass-card rounded-3xl p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
+          className="glass-card rounded-3xl p-4 sm:p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between mb-4">
@@ -616,7 +616,7 @@ export const Dashboard = () => {
         {/* Card 3: Marks & CGPA Overview */}
         <motion.div
           whileHover={{ y: -4 }}
-          className="glass-card rounded-3xl p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
+          className="glass-card rounded-3xl p-4 sm:p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between mb-4">
@@ -632,7 +632,7 @@ export const Dashboard = () => {
             <div>
               <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Current CGPA</span>
               <div className="flex items-baseline gap-2 mt-1">
-                <span className="font-poppins font-black text-3xl text-slate-800 dark:text-slate-100">
+                <span className="font-poppins font-black text-2xl sm:text-3xl text-slate-800 dark:text-slate-100">
                   {studentMarks.cumulativeCGPA}
                 </span>
                 <span className="text-xs text-slate-400 font-medium">/ 10.0</span>
@@ -653,11 +653,11 @@ export const Dashboard = () => {
       </div>
 
       {/* Second Row: Pomodoro Plant Garden + Sage Companion + Quick Notes */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Card 4: Pomodoro Plant Growth Gamification */}
         <motion.div
           whileHover={{ y: -4 }}
-          className="glass-card rounded-3xl p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
+          className="glass-card rounded-3xl p-4 sm:p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -672,14 +672,14 @@ export const Dashboard = () => {
               </span>
             </div>
 
-            <div className="flex items-center gap-5 my-4">
+            <div className="flex items-center gap-4 sm:gap-5 my-4">
               <motion.div
                 animate={{ scale: isActive ? [1, 1.1, 1] : 1 }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 flex flex-col items-center justify-center border border-emerald-500/30 text-3xl shadow-inner shrink-0"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 flex flex-col items-center justify-center border border-emerald-500/30 text-2xl sm:text-3xl shadow-inner shrink-0"
               >
                 <span>{getPlantEmoji()}</span>
-                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 mt-1">
+                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
                   Growing...
                 </span>
               </motion.div>
@@ -688,7 +688,7 @@ export const Dashboard = () => {
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   Focus on your goal, not on the clock.
                 </p>
-                <div className="font-poppins font-black text-3xl text-slate-800 dark:text-slate-100 tracking-wider my-1">
+                <div className="font-poppins font-black text-2xl sm:text-3xl text-slate-800 dark:text-slate-100 tracking-wider my-1">
                   {formatTimer(pomodoroSeconds)}
                 </div>
               </div>
@@ -722,7 +722,7 @@ export const Dashboard = () => {
         {/* Card 6: Quick Flash Notes / Resources */}
         <motion.div
           whileHover={{ y: -4 }}
-          className="glass-card rounded-3xl p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
+          className="glass-card rounded-3xl p-4 sm:p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between mb-4">

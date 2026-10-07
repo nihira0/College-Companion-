@@ -169,10 +169,10 @@ export const Attendance = () => {
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 sm:space-y-8 pb-12">
       {/* Header */}
       <div>
-        <h1 className="font-poppins font-extrabold text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-3">
+        <h1 className="font-poppins font-extrabold text-xl sm:text-2xl text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-3">
           <span className="p-2 rounded-2xl bg-emerald-500/10 text-emerald-500">📊</span>
           {isFacultyOrAdmin ? 'Faculty Attendance Management' : 'Attendance & Safe-Zone Dashboard'}
         </h1>
@@ -185,7 +185,7 @@ export const Attendance = () => {
 
       {/* Faculty Class Roster Register */}
       {isFacultyOrAdmin ? (
-        <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 shadow-xl space-y-4">
+        <div className="glass-card rounded-3xl p-4 sm:p-6 border border-emerald-500/30 shadow-xl space-y-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200/40 pb-4">
             <div>
               <h2 className="font-poppins font-bold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2">
@@ -293,9 +293,9 @@ export const Attendance = () => {
         /* Student Attendance Summary & Subject Cards */
         <>
           {/* Summary Banner */}
-          <div className="glass-card rounded-3xl p-6 border border-emerald-500/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="glass-card rounded-3xl p-4 sm:p-6 border border-emerald-500/30 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 shadow-xl">
             <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4">
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center shrink-0">
+              <div className="relative w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center shrink-0">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                   <path
                     className="text-slate-200 dark:text-slate-800"
@@ -314,7 +314,7 @@ export const Attendance = () => {
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   />
                 </svg>
-                <span className="absolute font-poppins font-black text-lg sm:text-xl text-slate-800 dark:text-slate-100">
+                <span className="absolute font-poppins font-black text-base sm:text-xl text-slate-800 dark:text-slate-100">
                   {overallPct}%
                 </span>
               </div>
@@ -340,7 +340,7 @@ export const Attendance = () => {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 text-xs font-poppins space-y-1">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/40 text-xs font-poppins space-y-1">
               <span className="font-bold text-slate-800 dark:text-slate-200 block">💡 Official Attendance Record:</span>
               <p className="text-slate-600 dark:text-slate-300">
                 Official attendance records maintained by assigned faculty. Attendance above 75% required for exam hall ticket eligibility.
@@ -349,14 +349,14 @@ export const Attendance = () => {
           </div>
 
           {/* Subject Wise Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {subjects.map(sub => {
               const status = calculateStatus(sub.attended, sub.total, sub.target);
               return (
                 <motion.div
                   key={sub.id || sub._id}
                   whileHover={{ y: -4 }}
-                  className="glass-card rounded-3xl p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
+                  className="glass-card rounded-3xl p-4 sm:p-6 border border-white/40 dark:border-slate-800/60 shadow-lg flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-3">
